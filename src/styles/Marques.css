@@ -1,0 +1,9 @@
+.display-buttons-marques {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    background-color: rgb(84, 93, 93);
+    color: white;
+    padding: 1vw;
+}

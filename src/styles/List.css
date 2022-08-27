@@ -1,0 +1,12 @@
+.displayGuitars {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+.displayInfoGuitar {
+    border: 2px solid black;
+    border-radius: 2vw;
+    margin: 1vw;
+    padding: 1vw;
+}
