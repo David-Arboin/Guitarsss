@@ -3,7 +3,7 @@ import { guitaresList } from '../datas/guitarList'
 import { useState } from 'react'
 import '../styles/Marques.css'
 
-export default function Marques(someParam) {
+export default function Marques() {
     const Marques = guitaresList.reduce((unique, item) => {
         return unique.includes(item.Marque) ? unique : [...unique, item.Marque]
     }, [])
@@ -11,7 +11,6 @@ export default function Marques(someParam) {
     //--Gestion du backgroun au click sur les buttons
     const [isActive, setIsActive] = useState(false)
     const [selection, setSelection] = useState([])
-
 
     const handleClick = async (e) => {
         e.preventDefault()
@@ -33,9 +32,11 @@ export default function Marques(someParam) {
             selection.length !== 0 &&
             selection.some((element) => element.Marque === e.currentTarget.id)
         ) {
-            setSelection(selection.filter(function (item) {
-                return item.Marque !== e.currentTarget.id
-            }))
+            setSelection(
+                selection.filter(function (item) {
+                    return item.Marque !== e.currentTarget.id
+                })
+            )
         }
         if (e.currentTarget.style.backgroundColor) {
             e.currentTarget.style.backgroundColor = null
@@ -43,9 +44,10 @@ export default function Marques(someParam) {
         } else {
             e.currentTarget.style.backgroundColor = 'salmon'
             e.currentTarget.style.color = 'white'
-        }        
+        }
     }
-console.log("selection", selection);
+    console.log('selection', selection)
+
     return (
         <>
             <div className="display-buttons-marques">
