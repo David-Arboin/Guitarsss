@@ -14,42 +14,46 @@ export default function HomePage() {
     const Styles = guitarList.reduce((unique, item) => {
         return unique.includes(item.Style) ? unique : [...unique, item.Style]
     }, [])
-console.log("Styles", Styles);
     //--Gestion du background au click sur les buttons
     const [isActiveStyles, setIsActiveStyles] = useState(false)
     const [isActiveMarques, setIsActiveMarques] = useState(false)
 
-    const [selection, setSelection] = useState([])
+    const [selectionMarques, setSelectionMarques] = useState([])
+    const [selectionStyles, setSelectionStyles] = useState([])
     const [isLoading, setIsLoading] = useState(true)
     let guitarSelect = []
 
-    const handleClick = async (e) => {
+    const handleClickMarques = async (e) => {
         e.preventDefault()
 
-        if (selection.length === 0) {
-            setSelection(
-                ...selection,
+        if (selectionMarques.length === 0) {
+            setSelectionMarques(
+                ...selectionMarques,
                 guitarList.filter(
                     (element) => element.Marque === e.currentTarget.id
                 )
             )
         } else if (
-            selection.length !== 0 &&
-            !selection.some((element) => element.Marque === e.currentTarget.id)
+            selectionMarques.length !== 0 &&
+            !selectionMarques.some(
+                (element) => element.Marque === e.currentTarget.id
+            )
         ) {
-            setSelection(
-                selection.concat(
+            setSelectionMarques(
+                selectionMarques.concat(
                     guitarList.filter(
                         (element) => element.Marque === e.currentTarget.id
                     )
                 )
             )
         } else if (
-            selection.length !== 0 &&
-            selection.some((element) => element.Marque === e.currentTarget.id)
+            selectionMarques.length !== 0 &&
+            selectionMarques.some(
+                (element) => element.Marque === e.currentTarget.id
+            )
         ) {
-            setSelection(
-                selection.filter(function (item) {
+            setSelectionMarques(
+                selectionMarques.filter(function (item) {
                     return item.Marque !== e.currentTarget.id
                 })
             )
@@ -62,21 +66,67 @@ console.log("Styles", Styles);
             e.currentTarget.style.color = 'white'
         }
     }
-    console.log('selection', selection)
 
-    if (selection.length > 0) {
-        guitarSelect = selection
+    const handleClickStyles = async (el) => {
+        el.preventDefault()
+
+        if (selectionStyles.length === 0) {
+            setSelectionStyles(
+                ...selectionStyles,
+                guitarList.filter(
+                    (element) => element.Style === el.currentTarget.id
+                )
+            )
+        } else if (
+            selectionStyles.length !== 0 &&
+            !selectionStyles.some(
+                (element) => element.Style === el.currentTarget.id
+            )
+        ) {
+            setSelectionStyles(
+                selectionStyles.concat(
+                    guitarList.filter(
+                        (element) => element.Style === el.currentTarget.id
+                    )
+                )
+            )
+        } else if (
+            selectionStyles.length !== 0 &&
+            selectionStyles.some(
+                (element) => element.Style === el.currentTarget.id
+            )
+        ) {
+            setSelectionStyles(
+                selectionStyles.filter(function (item) {
+                    return item.Style !== el.currentTarget.id
+                })
+            )
+        }
+        if (el.currentTarget.style.backgroundColor) {
+            el.currentTarget.style.backgroundColor = null
+            el.currentTarget.style.color = null
+        } else {
+            el.currentTarget.style.backgroundColor = 'blue'
+            el.currentTarget.style.color = 'white'
+        }
+    }
+
+    //--Tableau de rendu final
+    if (selectionStyles.length > 0 || selectionMarques.length > 0) {
+        guitarSelect = [...selectionStyles, ...selectionMarques].filter(
+            (val, id, array) => array.indexOf(val) == id
+        )
     } else {
         guitarSelect = guitarList
     }
 
     useEffect(() => {
-        if (!selection) {
+        if (!guitarSelect) {
             setIsLoading(true)
         } else {
             setIsLoading(false)
         }
-    }, [selection])
+    }, [guitarSelect])
 
     return isLoading ? (
         <div className="spinner-container">
@@ -86,19 +136,19 @@ console.log("Styles", Styles);
         <>
             <div className="display-buttons-styles">
                 Styles
-                {Styles.map((e) => (
+                {Styles.map((el) => (
                     <button
-                        id={e}
-                        name={e}
-                        value={e}
-                        key={e}
+                        id={el}
+                        name={el}
+                        value={el}
+                        key={'Styles' + el}
                         style={{
                             backgroundColor: isActiveStyles ? 'blue' : '',
                             color: isActiveStyles ? 'white' : '',
                         }}
-                        onClick={handleClick}
+                        onClick={handleClickStyles}
                     >
-                        {e}
+                        {el}
                     </button>
                 ))}
             </div>
@@ -110,12 +160,12 @@ console.log("Styles", Styles);
                         id={e}
                         name={e}
                         value={e}
-                        key={e}
+                        key={'Marques' + e}
                         style={{
                             backgroundColor: isActiveMarques ? 'salmon' : '',
                             color: isActiveMarques ? 'white' : '',
                         }}
-                        onClick={handleClick}
+                        onClick={handleClickMarques}
                     >
                         {e}
                     </button>
@@ -127,7 +177,7 @@ console.log("Styles", Styles);
                     ({ id, Style, Marque, Type, Gamme, isBestSale, cover }) => (
                         <GuitarList
                             id={id}
-                            key={id}
+                            key={'List' + id}
                             Style={Style}
                             Marque={Marque}
                             Type={Type}
