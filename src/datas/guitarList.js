@@ -4,9 +4,10 @@ import lag from '../assets/lag.jpg'
 import musicman from '../assets/musicman.jpg'
 import yamaha from '../assets/yamaha.jpg'
 
-export const guitaresList = [
+export const guitarList = [
     {
         id: 1,
+        Style: 'Rock',
         Marque: 'Gibson',
         Type: 'Electrique',
         Gamme: 'Pro',
@@ -15,6 +16,7 @@ export const guitaresList = [
     },
     {
         id: 2,
+        Style: 'Rock',
         Marque: 'Lag',
         Type: 'Sèche',
         Gamme: 'Pro',
@@ -23,6 +25,7 @@ export const guitaresList = [
     },
     {
         id: 3,
+        Style: 'Blues',
         Marque: 'Ibanez',
         Type: 'Acoustique',
         Gamme: 'Pro',
@@ -31,6 +34,7 @@ export const guitaresList = [
     },
     {
         id: 4,
+        Style: 'Blues',
         Marque: 'Musicman',
         Type: 'Electrique/Acoustique',
         Gamme: 'Pro',
@@ -39,6 +43,7 @@ export const guitaresList = [
     },
     {
         id: 5,
+        Style: 'Jazz',
         Marque: 'Yamaha',
         Type: 'Electrique/Sèche',
         Gamme: 'Débutant',
@@ -47,6 +52,7 @@ export const guitaresList = [
     },
     {
         id: 6,
+        Style: 'Jazz',
         Marque: 'Gibson',
         Type: 'Sèche/Acoustique',
         Gamme: 'Débutant',
@@ -54,7 +60,8 @@ export const guitaresList = [
         cover: gibson,
     },
     {
-        id: '7',
+        id: 7,
+        Style: 'Métal',
         Marque: 'Lag',
         Type: 'Electrique/Enfant',
         Gamme: 'Amateur',
@@ -63,6 +70,7 @@ export const guitaresList = [
     },
     {
         id: 8,
+        Style: 'Métal',
         Marque: 'Ibanez',
         Type: 'Electrique/Adulte',
         Gamme: 'Amateur',
@@ -71,6 +79,7 @@ export const guitaresList = [
     },
     {
         id: 9,
+        Style: 'Funck',
         Marque: 'Musicman',
         Type: 'Sèche/Enfant',
         Gamme: 'Débutant',
@@ -79,6 +88,7 @@ export const guitaresList = [
     },
     {
         id: 10,
+        Style: 'Funck',
         Marque: 'Yamaha',
         Type: 'Acoustique/Enfant',
         Gamme: 'Amateur',

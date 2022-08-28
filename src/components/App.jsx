@@ -3,8 +3,7 @@ import '../styles/App.css'
 import Banner from './Banner'
 import Footer from './Footer'
 import logo from '../assets/logo.png'
-import Marques from '../buttons/Marques'
-import List from './List'
+import HomePage from '../buttons/HomePage'
 
 /* import Page from './page.jsx' */
 
@@ -24,8 +23,7 @@ export default function App(params) {
                 {/*                <p>Ici, consultez toutes les guitares que vous souhaitez</p> */}
             </Banner>
 
-            <Marques />
-            <List />
+            <HomePage />
             <Footer />
         </div>
     )

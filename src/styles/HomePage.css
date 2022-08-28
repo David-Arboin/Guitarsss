@@ -1,0 +1,21 @@
+.display-buttons-styles{
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    background-color: rgb(32, 190, 190);
+    color: white;
+    padding: 1vw;
+}
+.display-buttons-marques {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    background-color: rgb(84, 93, 93);
+    color: white;
+    padding: 1vw;
+}
+.displayImageGuitar{
+    width: 5vw;
+}
