@@ -62,7 +62,7 @@ export default function HomePage() {
             e.currentTarget.style.backgroundColor = null
             e.currentTarget.style.color = null
         } else {
-            e.currentTarget.style.backgroundColor = 'salmon'
+            e.currentTarget.style.backgroundColor = 'rgb(84, 93, 93)'
             e.currentTarget.style.color = 'white'
         }
     }
@@ -106,7 +106,7 @@ export default function HomePage() {
             el.currentTarget.style.backgroundColor = null
             el.currentTarget.style.color = null
         } else {
-            el.currentTarget.style.backgroundColor = 'blue'
+            el.currentTarget.style.backgroundColor = 'rgb(32, 190, 190)'
             el.currentTarget.style.color = 'white'
         }
     }
@@ -139,11 +139,12 @@ export default function HomePage() {
                 {Styles.map((el) => (
                     <button
                         id={el}
+                        className="style-button-styles"
                         name={el}
                         value={el}
                         key={'Styles' + el}
                         style={{
-                            backgroundColor: isActiveStyles ? 'blue' : '',
+                            backgroundColor: isActiveStyles ? 'rgb(32, 190, 190)' : '',
                             color: isActiveStyles ? 'white' : '',
                         }}
                         onClick={handleClickStyles}
@@ -158,11 +159,12 @@ export default function HomePage() {
                 {Marques.map((e) => (
                     <button
                         id={e}
+                        className="style-button-marques"
                         name={e}
                         value={e}
                         key={'Marques' + e}
                         style={{
-                            backgroundColor: isActiveMarques ? 'salmon' : '',
+                            backgroundColor: isActiveMarques ? 'rgb(84, 93, 93)' : '',
                             color: isActiveMarques ? 'white' : '',
                         }}
                         onClick={handleClickMarques}
@@ -172,7 +174,7 @@ export default function HomePage() {
                 ))}
             </div>
 
-            <div className="displayGuitars">
+            <div className="display-guitars">
                 {guitarSelect.map(
                     ({ id, Style, Marque, Type, Gamme, isBestSale, cover }) => (
                         <GuitarList

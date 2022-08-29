@@ -1,21 +1,48 @@
-.display-buttons-styles{
-    width: 100%;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
-    background-color: rgb(32, 190, 190);
-    color: white;
-    padding: 1vw;
-}
+.display-buttons-styles,
 .display-buttons-marques {
     width: 100%;
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
     justify-content: space-around;
-    background-color: rgb(84, 93, 93);
     color: white;
     padding: 1vw;
+    font-weight: bold;
+
 }
-.displayImageGuitar{
-    width: 5vw;
+.display-buttons-styles{
+    background-color: rgb(32, 190, 190);
+
+}
+.display-buttons-marques {
+    background-color: rgb(84, 93, 93);
+
+}
+
+.display-image-guitar{
+    width: 100%;
+}
+.style-button-styles,
+.style-button-marques{
+min-width: 10%;
+height: auto;
+border-radius: 2vw;
+font-family: 'Bauman';
+font-size: 2vw;
+padding: 0 1vw 0 1vw;
+}
+
+.style-button-styles{
+    border: 5px solid brown;
+}
+
+.style-button-marques{
+    border: 5px solid rgb(63, 108, 15);
+}
+.style-button-styles:hover{
+    border: 5px solid rgb(149, 125, 125);
+}
+
+.style-button-marques:hover{
+    border: 5px solid rgb(102, 110, 94);
 }
