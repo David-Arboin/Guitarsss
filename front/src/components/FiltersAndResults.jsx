@@ -1,26 +1,18 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { useState, useEffect } from 'react'
-import '../styles/LoadingSpinner.css'
-import '../styles/HomePage.css'
+import '../styles/FiltersAndResults.css'
+import GuitarList from './GuitarList'
 
-import GuitarList from '../components/GuitarList'
-import { guitarList } from '../datas/guitarList.js'
 
-export default function HomePage() {
-    const Marques = guitarList.reduce((unique, item) => {
-        return unique.includes(item.Marque) ? unique : [...unique, item.Marque]
-    }, [])
-
-    const Styles = guitarList.reduce((unique, item) => {
-        return unique.includes(item.Style) ? unique : [...unique, item.Style]
-    }, [])
+export default function FiltersAndResults(props) {
+console.log(props);
+    let guitarList = props.data
     //--Gestion du background au click sur les buttons
     const [isActiveStyles, setIsActiveStyles] = useState(false)
     const [isActiveMarques, setIsActiveMarques] = useState(false)
 
     const [selectionMarques, setSelectionMarques] = useState([])
     const [selectionStyles, setSelectionStyles] = useState([])
-    const [isLoading, setIsLoading] = useState(true)
     let guitarSelect = []
 
     const handleClickMarques = async (e) => {
@@ -120,58 +112,52 @@ export default function HomePage() {
         guitarSelect = guitarList
     }
 
-    useEffect(() => {
-        if (!guitarSelect) {
-            setIsLoading(true)
-        } else {
-            setIsLoading(false)
-        }
-    }, [guitarSelect])
-
-    return isLoading ? (
-        <div className="spinner-container">
-            <div className="loading-spinner"></div>
-        </div>
-    ) : (
+    return (
         <>
-            <div className="display-buttons-styles">
-                Styles
-                {Styles.map((el) => (
-                    <button
-                        id={el}
-                        className="style-button-styles"
-                        name={el}
-                        value={el}
-                        key={'Styles' + el}
-                        style={{
-                            backgroundColor: isActiveStyles ? 'rgb(32, 190, 190)' : '',
-                            color: isActiveStyles ? 'white' : '',
-                        }}
-                        onClick={handleClickStyles}
-                    >
-                        {el}
-                    </button>
-                ))}
-            </div>
+            <div className="display-options">
+                <div className="display-buttons-styles">
+                    Styles
+                    {props.Styles.map((el) => (
+                        <button
+                            id={el}
+                            className="style-button-styles"
+                            name={el}
+                            value={el}
+                            key={'Styles' + el}
+                            style={{
+                                backgroundColor: isActiveStyles
+                                    ? 'rgb(32, 190, 190)'
+                                    : '',
+                                color: isActiveStyles ? 'white' : '',
+                            }}
+                            onClick={handleClickStyles}
+                        >
+                            {el}
+                        </button>
+                    ))}
+                </div>
 
-            <div className="display-buttons-marques">
-                Marques
-                {Marques.map((e) => (
-                    <button
-                        id={e}
-                        className="style-button-marques"
-                        name={e}
-                        value={e}
-                        key={'Marques' + e}
-                        style={{
-                            backgroundColor: isActiveMarques ? 'rgb(84, 93, 93)' : '',
-                            color: isActiveMarques ? 'white' : '',
-                        }}
-                        onClick={handleClickMarques}
-                    >
-                        {e}
-                    </button>
-                ))}
+                <div className="display-buttons-marques">
+                    Marques
+                    {props.Marques.map((e) => (
+                        <button
+                            id={e}
+                            className="style-button-marques"
+                            name={e}
+                            value={e}
+                            key={'Marques' + e}
+                            style={{
+                                backgroundColor: isActiveMarques
+                                    ? 'rgb(84, 93, 93)'
+                                    : '',
+                                color: isActiveMarques ? 'white' : '',
+                            }}
+                            onClick={handleClickMarques}
+                        >
+                            {e}
+                        </button>
+                    ))}
+                </div>
             </div>
 
             <div className="display-guitars">

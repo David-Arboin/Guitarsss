@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import '../styles/GuitarList.css'
 
-export default function List(guitar) {
+export default function GuitarList(guitar) {
     return (
         <>
             <div className="display-infos-guitar">
