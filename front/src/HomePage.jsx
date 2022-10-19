@@ -14,6 +14,7 @@ export default function HomePage(params) {
     const [data, setData] = useState(null)
     let Marques = []
     let Styles = []
+    let Types = []
     
     let [token, setToken] = useContext(TokenContext)
 
@@ -49,6 +50,12 @@ export default function HomePage(params) {
                 ? unique
                 : [...unique, item.style]
         }, [])
+
+        Types = data.reduce((unique, item) => {
+            return unique.includes(item.type)
+                ? unique
+                : [...unique, item.type]
+        }, [])
     }
     
     return isLoading ? (
@@ -58,8 +65,8 @@ export default function HomePage(params) {
     ) : (
         <div className="home-page">
             <Banner />
-            {token ? <Work Marques={Marques} Styles={Styles} /> : ''}
-            <FiltersAndResults data={data} Marques={Marques} Styles={Styles} />
+            {token ? <Work Marques={Marques} Styles={Styles} Types={Types} /> : ''}
+            <FiltersAndResults Data={data} Marques={Marques} Styles={Styles} Types={Types}/>
             <Footer />
         </div>
     )

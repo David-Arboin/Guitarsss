@@ -5,14 +5,16 @@ import GuitarList from './GuitarList'
 
 
 export default function FiltersAndResults(props) {
-console.log(props);
-    let guitarList = props.data
+    let guitarList = props.Data
     //--Gestion du background au click sur les buttons
     const [isActiveStyles, setIsActiveStyles] = useState(false)
     const [isActiveMarques, setIsActiveMarques] = useState(false)
+    const [isActiveTypes, setIsActiveTypes] = useState(false)
 
     const [selectionMarques, setSelectionMarques] = useState([])
     const [selectionStyles, setSelectionStyles] = useState([])
+    const [selectionTypes, setSelectionTypes] = useState([])
+
     let guitarSelect = []
 
     const handleClickMarques = async (e) => {
@@ -22,31 +24,31 @@ console.log(props);
             setSelectionMarques(
                 ...selectionMarques,
                 guitarList.filter(
-                    (element) => element.Marque === e.currentTarget.id
+                    (element) => element.marque === e.currentTarget.id
                 )
             )
         } else if (
             selectionMarques.length !== 0 &&
             !selectionMarques.some(
-                (element) => element.Marque === e.currentTarget.id
+                (element) => element.marque === e.currentTarget.id
             )
         ) {
             setSelectionMarques(
                 selectionMarques.concat(
                     guitarList.filter(
-                        (element) => element.Marque === e.currentTarget.id
+                        (element) => element.marque === e.currentTarget.id
                     )
                 )
             )
         } else if (
             selectionMarques.length !== 0 &&
             selectionMarques.some(
-                (element) => element.Marque === e.currentTarget.id
+                (element) => element.marque === e.currentTarget.id
             )
         ) {
             setSelectionMarques(
                 selectionMarques.filter(function (item) {
-                    return item.Marque !== e.currentTarget.id
+                    return item.marque !== e.currentTarget.id
                 })
             )
         }
@@ -66,31 +68,75 @@ console.log(props);
             setSelectionStyles(
                 ...selectionStyles,
                 guitarList.filter(
-                    (element) => element.Style === el.currentTarget.id
+                    (element) => element.style === el.currentTarget.id
                 )
             )
         } else if (
             selectionStyles.length !== 0 &&
             !selectionStyles.some(
-                (element) => element.Style === el.currentTarget.id
+                (element) => element.style === el.currentTarget.id
             )
         ) {
             setSelectionStyles(
                 selectionStyles.concat(
                     guitarList.filter(
-                        (element) => element.Style === el.currentTarget.id
+                        (element) => element.style === el.currentTarget.id
                     )
                 )
             )
         } else if (
             selectionStyles.length !== 0 &&
             selectionStyles.some(
-                (element) => element.Style === el.currentTarget.id
+                (element) => element.style === el.currentTarget.id
             )
         ) {
             setSelectionStyles(
                 selectionStyles.filter(function (item) {
-                    return item.Style !== el.currentTarget.id
+                    return item.style !== el.currentTarget.id
+                })
+            )
+        }
+        if (el.currentTarget.style.backgroundColor) {
+            el.currentTarget.style.backgroundColor = null
+            el.currentTarget.style.color = null
+        } else {
+            el.currentTarget.style.backgroundColor = 'rgb(32, 190, 190)'
+            el.currentTarget.style.color = 'white'
+        }
+    }
+
+    const handleClickTypes = async (el) => {
+        el.preventDefault()
+
+        if (selectionTypes.length === 0) {
+            setSelectionTypes(
+                ...selectionTypes,
+                guitarList.filter(
+                    (element) => element.type === el.currentTarget.id
+                )
+            )
+        } else if (
+            selectionTypes.length !== 0 &&
+            !selectionTypes.some(
+                (element) => element.type === el.currentTarget.id
+            )
+        ) {
+            setSelectionTypes(
+                selectionTypes.concat(
+                    guitarList.filter(
+                        (element) => element.type === el.currentTarget.id
+                    )
+                )
+            )
+        } else if (
+            selectionTypes.length !== 0 &&
+            selectionTypes.some(
+                (element) => element.type === el.currentTarget.id
+            )
+        ) {
+            setSelectionTypes(
+                selectionTypes.filter(function (item) {
+                    return item.type !== el.currentTarget.id
                 })
             )
         }
@@ -104,14 +150,14 @@ console.log(props);
     }
 
     //--Tableau de rendu final
-    if (selectionStyles.length > 0 || selectionMarques.length > 0) {
-        guitarSelect = [...selectionStyles, ...selectionMarques].filter(
+    if (selectionStyles.length > 0 || selectionMarques.length > 0 || selectionTypes.length > 0) {
+        guitarSelect = [...selectionStyles, ...selectionMarques, ...selectionTypes].filter(
             (val, id, array) => array.indexOf(val) == id
         )
     } else {
         guitarSelect = guitarList
     }
-
+    let key = 0
     return (
         <>
             <div className="display-options">
@@ -123,7 +169,7 @@ console.log(props);
                             className="style-button-styles"
                             name={el}
                             value={el}
-                            key={'Styles' + el}
+                            key={'Styles' + key++}
                             style={{
                                 backgroundColor: isActiveStyles
                                     ? 'rgb(32, 190, 190)'
@@ -145,7 +191,7 @@ console.log(props);
                             className="style-button-marques"
                             name={e}
                             value={e}
-                            key={'Marques' + e}
+                            key={'Marques' + key++}
                             style={{
                                 backgroundColor: isActiveMarques
                                     ? 'rgb(84, 93, 93)'
@@ -158,20 +204,43 @@ console.log(props);
                         </button>
                     ))}
                 </div>
+
+                                <div className="display-buttons-types">
+                    Types
+                    {props.Types.map((e) => (
+                        <button
+                            id={e}
+                            className="style-button-types"
+                            name={e}
+                            value={e}
+                            key={'Types' + key++}
+                            style={{
+                                backgroundColor: isActiveTypes
+                                    ? 'rgb(84, 93, 93)'
+                                    : '',
+                                color: isActiveTypes ? 'white' : '',
+                            }}
+                            onClick={handleClickTypes}
+                        >
+                            {e}
+                        </button>
+                    ))}
+                </div>
             </div>
 
             <div className="display-guitars">
                 {guitarSelect.map(
-                    ({ id, Style, Marque, Type, Gamme, isBestSale, cover }) => (
+                    ({ _id, style, marque, type, imageUrl, majeur, manualPreference
+ }) => (
                         <GuitarList
-                            id={id}
-                            key={'List' + id}
-                            Style={Style}
-                            Marque={Marque}
-                            Type={Type}
-                            Gamme={Gamme}
-                            isBestSale={isBestSale}
-                            cover={cover}
+                            id={_id}
+                            key={'List' + _id}
+                            style={style}
+                            marque={marque}
+                            type={type}
+                            majeur={majeur}
+                            manualPreference={manualPreference}
+                            imageUrl={imageUrl}
                         />
                     )
                 )}

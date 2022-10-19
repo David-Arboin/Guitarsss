@@ -8,7 +8,8 @@ require('dotenv').config()
 
 //**********Création d'un post
 exports.createPost = (req, res, next) => {
-    const dataObject = new Function('return [' + req.body.post + '];')()
+    /*     const dataObject = new Function('return [' + req.body.post + '];')()
+    console.log('dataObject[0].type')
     const post = new Post({
         userId: req.auth.userId,
         type: dataObject[0].type,
@@ -16,6 +17,18 @@ exports.createPost = (req, res, next) => {
         majeur: dataObject[0].majeur,
         marque: dataObject[0].marque,
         style: dataObject[0].style,
+        imageUrl: `${req.protocol}://${req.get('host')}/images/${
+            req.file?.filename
+        }`, //--Reconstruction de l'Url de l'image
+    }) */
+
+    const post = new Post({
+        userId: req.auth.userId,
+        type: req.body.type,
+        manualPreference: req.body.manualPreference,
+        majeur: req.body.majeur,
+        marque: req.body.marque,
+        style: req.body.style,
         imageUrl: `${req.protocol}://${req.get('host')}/images/${
             req.file?.filename
         }`, //--Reconstruction de l'Url de l'image

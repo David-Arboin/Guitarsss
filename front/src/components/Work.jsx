@@ -1,40 +1,88 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import '../styles/Work.css'
-import React, { useRef } from 'react'
+import React, { useRef, useState } from 'react'
 import { TokenContext } from '../App'
 import '../styles/LoadingSpinner.css'
 
 export default function Work(props) {
-    console.log(props)
-    //--Suppression des doublons des filtres
+    //--Personnalisation des keys
+    let keyStyles = 0
+    let keyMarques = 0
+    let keyTypes = 0
 
+    //--Gestion des input de type radio
+    const [age, setAge] = useState()
+    const [manualPreference, setManualPreference] = useState()
+
+    //--Possibilité d'ajouter un style une marque ou un type
+    const [addStyle, setAddStyle] = useState(false)
+    const [addMarque, setAddMarque] = useState(false)
+    const [addType, setAddType] = useState(false)
+
+    const handleAddStyle = (e) => {
+        if (e.target.value === 'Ajouter un style') {
+            setAddStyle(true)
+        } else {
+            setAddStyle(false)
+        }
+    }
+
+    const handleAddMarque = (e) => {
+        if (e.target.value === 'Ajouter une marque') {
+            setAddMarque(true)
+        } else {
+            setAddMarque(false)
+        }
+    }
+
+    const handleAddType = (e) => {
+        if (e.target.value === 'Ajouter un type') {
+            setAddType(true)
+        } else {
+            setAddType(false)
+        }
+    }
     let [token, setToken] = React.useContext(TokenContext)
     const inputs = useRef([])
     const addInputs = (el) => {
         inputs.current.push(el)
     }
 
+    const handleAgeChange = (e) => {
+        setAge(e.target.value)
+    }
+    const handlemanualPreferenceChange = (e) => {
+        setManualPreference(e.target.value)
+    }
+
     const handleForm = (event, props) => {
         event.preventDefault()
-        const form = event.target
-        const formData = new FormData()
 
+        const form = event.target
+        setManualPreference(event.target[6].value)
+
+        const formData = new FormData()
         const requestOptionsCreate = {
             method: 'POST',
             headers: { Authorization: 'Bearer ' + token },
             body: formData,
         }
-        formData.append('image', form[0].files[0])
-        formData.append('style', form[1].value[0])
-        formData.append('marque', form[2].value[0])
-        formData.append('type', form[3].value[0])
-        formData.append('majeur', form[4].value[0])
-        formData.append('manualPreference', form[5].value[0])
-        fetch('http://localhost:8000/guitarsss/posts', requestOptionsCreate)
-            .then((response) => response.json())
-            .then((data) => {
-                form.reset()
-            })
+        if (form[1].value === '') {
+            console.log('Il manque le style')
+        } else {
+            formData.append('image', form[0].files[0])
+            formData.append('style', form[1].value)
+            formData.append('marque', form[2].value)
+            formData.append('type', form[3].value)
+            formData.append('majeur', age)
+            formData.append('manualPreference', manualPreference)
+            fetch('http://localhost:8000/guitarsss/posts', requestOptionsCreate)
+                .then((response) => response.json())
+                .then((data) => {
+                    console.log('Post enregistré')
+                })
+                .catch((error) => console.log('Il y a un problème'))
+        }
     }
 
     return (
@@ -56,78 +104,102 @@ export default function Work(props) {
                     <label htmlFor="style" className="widthTextNameOrPseeudo">
                         Style
                     </label>
-                    <select id="style" name="style" ref={addInputs}>
-                        <option disabled selected value>
-                            Quel style ?
-                        </option>
-                        {/* {props.Style.map((e) => 
-                            <option key={}>{e.marque}</option>
-                        )} */}
-                    </select>
+                    {addStyle ? (
+                        <input type="text" />
+                    ) : (
+                        <select
+                            id="style"
+                            name="style"
+                            ref={addInputs}
+                            defaultValue={'DEFAULT'}
+                            onChange={handleAddStyle}
+                        >
+                            <option value="DEFAULT" disabled>
+                                Quel style ?
+                            </option>
+                            {props.Styles.map((e) => (
+                                <option key={'e' + keyStyles++}>{e}</option>
+                            ))}
 
+                            <option key="addStyleKey">Ajouter un style</option>
+                        </select>
+                    )}
                     <label htmlFor="marque">Marque</label>
-                    <select id="marque" name="marque" ref={addInputs}>
-                        <option disabled selected value>
-                            Quelle marque ?
-                        </option>
-
-                        <option>Volvo</option>
-                        <option>Saab</option>
-                        <option>Fiat</option>
-                        <option>Audi</option>
-                    </select>
-
+                    {addMarque ? (
+                        <input type="text" />
+                    ) : (
+                        <select
+                            id="marque"
+                            name="marque"
+                            ref={addInputs}
+                            defaultValue={'DEFAULT'}
+                        >
+                            <option value="DEFAULT" disabled>
+                                Quelle marque ?
+                            </option>
+                            {props.Marques.map((e) => (
+                                <option key={'e' + keyMarques++}>{e}</option>
+                            ))}
+                        </select>
+                    )}
                     <label htmlFor="type">Type</label>
-                    <select id="type" name="type" ref={addInputs}>
-                        <option disabled selected value>
-                            Quel type ?
-                        </option>
+                    {addType ? (
+                        <input type="text" />
+                    ) : (
+                        <select
+                            id="type"
+                            name="type"
+                            ref={addInputs}
+                            defaultValue={'DEFAULT'}
+                        >
+                            <option value="DEFAULT" disabled>
+                                Quel type ?
+                            </option>
 
-                        <option>type1</option>
-                        <option>type2</option>
-                        <option>type3</option>
-                        <option>type4</option>
-                    </select>
-
-                    <h2>Mineur ou Majeur</h2>
+                            {props.Types.map((e) => (
+                                <option key={'e' + keyTypes++}>{e}</option>
+                            ))}
+                        </select>
+                    )}
+                    <h2>Age</h2>
                     <div>
                         <input
-                            name="age"
                             type="radio"
-                            ref={addInputs}
-                            id="Minor"
+                            name="age"
+                            value="Mineur"
+                            onChange={handleAgeChange}
+                            checked={age === 'Mineur'}
                         />
-                        <label htmlFor="Minor">Mineur</label>
-                    </div>
-                    <div>
+                        <label htmlFor="mineur">Mineur</label>
                         <input
-                            name="age"
                             type="radio"
-                            ref={addInputs}
-                            id="Major"
+                            name="age"
+                            value="Majeur"
+                            onChange={handleAgeChange}
+                            checked={age === 'Majeur'}
                         />
-                        <label htmlFor="Major">Majeur</label>
+                        <label htmlFor="majeur">Majeur</label>
                     </div>
-
                     <h2>Préférence manuelle</h2>
                     <div>
                         <input
-                            name="manualPreference"
                             type="radio"
-                            ref={addInputs}
-                            id="right-handed"
+                            name="manualPreference"
+                            value="Droitier"
+                            onChange={handlemanualPreferenceChange}
+                            checked={manualPreference === 'Droitier'}
                         />
-                        <label htmlFor="right-handed">Droitier</label>
-                    </div>
-                    <div>
+                        Droitier
                         <input
-                            name="manualPreference"
                             type="radio"
-                            ref={addInputs}
-                            id="left-handed"
+                            name="manualPreference"
+                            value="Gaucher"
+                            onChange={handlemanualPreferenceChange}
+                            checked={manualPreference === 'Gaucher'}
                         />
-                        <label htmlFor="left-handed">Gaucher</label>
+                        Gaucher
                     </div>
+
                     <input
                         type="submit"
                         value="Enregistrer la NEW GRATTE"

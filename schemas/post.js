@@ -3,8 +3,7 @@ const mongoose = require('mongoose') //--Infrastructure de modélisation d’obj
 const mongooseErrors = require('mongoose-errors') //--Gestionnaire d'erreurs monggose
 
 const postSchema = mongoose.Schema({
-    userId: { type: String, required: true }, //-- l'identifiant MongoDB unique de l'utilisateur qui a créé le post
-    imageUrl: { type: String, required: true }, //-- l'URL de l'image à téléchargée par l'utilisateur
+    imageUrl: { type: String, required: false }, //-- l'URL de l'image à téléchargée par l'utilisateur
     type: { type: String, required: true }, //-- Acoustique ou électrique* ou électro-acoustique*
     manualPreference: { type: String, required: true }, //-- Droitier ou gaucher*
     majeur: { type: String, required: true }, //-- Adulte ou enfant*
