@@ -3,22 +3,61 @@ import { useState, useEffect } from 'react'
 import '../styles/FiltersAndResults.css'
 import GuitarList from './GuitarList'
 
-
 export default function FiltersAndResults(props) {
     let guitarList = props.Data
+    let guitarSelect = []
+
     //--Gestion du background au click sur les buttons
     const [isActiveStyles, setIsActiveStyles] = useState(false)
     const [isActiveMarques, setIsActiveMarques] = useState(false)
     const [isActiveTypes, setIsActiveTypes] = useState(false)
 
+    //--Gestion de l'affichage si seulement une section de filtre est utilisés (ex : Un ou plusieurs Styles)
     const [selectionMarques, setSelectionMarques] = useState([])
     const [selectionStyles, setSelectionStyles] = useState([])
     const [selectionTypes, setSelectionTypes] = useState([])
 
-    let guitarSelect = []
+    //--Gestion des sélections dans plusieurs filtres
+    const [activeStyles, setActiveStyles] = useState([])
+    const [activeMarques, setActiveMarques] = useState([])
+    const [activeTypes, setActiveTypes] = useState([])
+
+    const [selection, setSelection] = useState([])
+    /*     const [titleFilter, setTitleFilter] = useState([]) */
+
+    const handleClick = async (e) => {
+        e.preventDefault()
+
+        let searchtext = e.currentTarget.id
+        selection.push(e.currentTarget.title)
+
+        if (
+            searchtext !== undefined &&
+            searchtext !== '' &&
+            searchtext != null
+        ) {
+            guitarSelect = guitarList.filter((item) => {
+                return selection.some((searchProperty) => {
+                    const itemPropertyValue = item[searchProperty]
+                    return itemPropertyValue.includes(searchtext)
+                })
+            })
+            console.log(guitarSelect)
+        }
+    }
 
     const handleClickMarques = async (e) => {
         e.preventDefault()
+
+        //--Tableau des marques sélectionnés pour gérer plusieurs filtres
+        if (!activeMarques.includes(e.currentTarget.id)) {
+            activeMarques.push(e.currentTarget.id)
+        } else {
+            const newActiveMarques = activeMarques.filter(function (f) {
+                return f !== e.currentTarget.id
+            })
+            setActiveMarques(newActiveMarques)
+        }
 
         if (selectionMarques.length === 0) {
             setSelectionMarques(
@@ -64,6 +103,16 @@ export default function FiltersAndResults(props) {
     const handleClickStyles = async (el) => {
         el.preventDefault()
 
+        //--Tableau des styles sélectionnés pour gérer plusieurs filtres
+        if (!activeStyles.includes(el.currentTarget.id)) {
+            activeStyles.push(el.currentTarget.id)
+        } else {
+            const newActiveStyles = activeStyles.filter(function (f) {
+                return f !== el.currentTarget.id
+            })
+            setActiveStyles(newActiveStyles)
+        }
+
         if (selectionStyles.length === 0) {
             setSelectionStyles(
                 ...selectionStyles,
@@ -108,6 +157,16 @@ export default function FiltersAndResults(props) {
     const handleClickTypes = async (el) => {
         el.preventDefault()
 
+        //--Tableau des marques sélectionnés pour gérer plusieurs filtres
+        if (!activeTypes.includes(el.currentTarget.id)) {
+            activeTypes.push(el.currentTarget.id)
+        } else {
+            const newActiveTypes = activeTypes.filter(function (f) {
+                return f !== el.currentTarget.id
+            })
+            setActiveTypes(newActiveTypes)
+        }
+
         if (selectionTypes.length === 0) {
             setSelectionTypes(
                 ...selectionTypes,
@@ -150,13 +209,46 @@ export default function FiltersAndResults(props) {
     }
 
     //--Tableau de rendu final
-    if (selectionStyles.length > 0 || selectionMarques.length > 0 || selectionTypes.length > 0) {
-        guitarSelect = [...selectionStyles, ...selectionMarques, ...selectionTypes].filter(
-            (val, id, array) => array.indexOf(val) == id
+    //--Si seulement des styles sont séléctionnés
+    if (
+        selectionStyles.length > 0 &&
+        selectionMarques.length === 0 &&
+        selectionTypes.length === 0
+    ) {
+        guitarSelect = [...selectionStyles].filter(
+            (val, id, array) => array.indexOf(val) === id
         )
+    } //--Si seulement des marques sont séléctionnés
+    else if (
+        selectionStyles.length === 0 &&
+        selectionMarques.length > 0 &&
+        selectionTypes.length === 0
+    ) {
+        guitarSelect = [...selectionMarques].filter(
+            (val, id, array) => array.indexOf(val) === id
+        )
+    }
+    //--Si seulement des types sont séléctionnés
+    else if (
+        selectionStyles.length === 0 &&
+        selectionMarques.length === 0 &&
+        selectionTypes.length > 0
+    ) {
+        guitarSelect = [...selectionTypes].filter(
+            (val, id, array) => array.indexOf(val) === id
+        )
+    } //--Si un ou plusieurs styles ET marques sont séléctionnés
+    else if (
+        activeStyles.length > 0 &&
+        activeMarques.length > 0 &&
+        activeTypes.length === 0
+    ) {
+        console.log(activeStyles)
+        console.log(activeMarques)
     } else {
         guitarSelect = guitarList
     }
+
     let key = 0
     return (
         <>
@@ -169,6 +261,7 @@ export default function FiltersAndResults(props) {
                             className="style-button-styles"
                             name={el}
                             value={el}
+                            title="styles"
                             key={'Styles' + key++}
                             style={{
                                 backgroundColor: isActiveStyles
@@ -176,7 +269,7 @@ export default function FiltersAndResults(props) {
                                     : '',
                                 color: isActiveStyles ? 'white' : '',
                             }}
-                            onClick={handleClickStyles}
+                            onClick={handleClick}
                         >
                             {el}
                         </button>
@@ -191,6 +284,7 @@ export default function FiltersAndResults(props) {
                             className="style-button-marques"
                             name={e}
                             value={e}
+                            title="marques"
                             key={'Marques' + key++}
                             style={{
                                 backgroundColor: isActiveMarques
@@ -198,14 +292,14 @@ export default function FiltersAndResults(props) {
                                     : '',
                                 color: isActiveMarques ? 'white' : '',
                             }}
-                            onClick={handleClickMarques}
+                            onClick={handleClick}
                         >
                             {e}
                         </button>
                     ))}
                 </div>
 
-                                <div className="display-buttons-types">
+                <div className="display-buttons-types">
                     Types
                     {props.Types.map((e) => (
                         <button
@@ -214,13 +308,14 @@ export default function FiltersAndResults(props) {
                             name={e}
                             value={e}
                             key={'Types' + key++}
+                            title="types"
                             style={{
                                 backgroundColor: isActiveTypes
                                     ? 'rgb(84, 93, 93)'
                                     : '',
                                 color: isActiveTypes ? 'white' : '',
                             }}
-                            onClick={handleClickTypes}
+                            onClick={handleClick}
                         >
                             {e}
                         </button>
@@ -230,8 +325,15 @@ export default function FiltersAndResults(props) {
 
             <div className="display-guitars">
                 {guitarSelect.map(
-                    ({ _id, style, marque, type, imageUrl, majeur, manualPreference
- }) => (
+                    ({
+                        _id,
+                        style,
+                        marque,
+                        type,
+                        imageUrl,
+                        majeur,
+                        manualPreference,
+                    }) => (
                         <GuitarList
                             id={_id}
                             key={'List' + _id}
