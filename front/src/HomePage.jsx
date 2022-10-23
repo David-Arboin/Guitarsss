@@ -5,40 +5,47 @@ import Banner from './components/Banner'
 import './styles/LoadingSpinner.css'
 
 import Work from './components/Work'
-import Footer from './components/Footer'
+/* import Footer from './components/Footer' */
 import FiltersAndResults from './components/FiltersAndResults'
+import DataIsNull from './components/DataIsNull'
 import { TokenContext } from './App'
+import { DataContext } from './App'
 
 export default function HomePage(params) {
     const [isLoading, setIsLoading] = useState(true)
-    const [data, setData] = useState(null)
+    const [dataNull, setDataNull] = useState(false)
     let Marques = []
     let Styles = []
     let Types = []
-    
-    let [token, setToken] = useContext(TokenContext)
 
-    const requestOptions = {
+    let [token, setToken] = useContext(TokenContext)
+    let [data, setData] = useContext(DataContext)
+
+    useEffect(() => {
+            const requestOptions = {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
             Accept: 'application/json',
         },
     }
-    useEffect(() => {
         setIsLoading(true)
         fetch('http://localhost:8000/guitarsss/posts/', requestOptions)
             .then((response) => response.json())
             .then((data) => {
                 setData(data)
                 setIsLoading(false)
+                if (data.length === 0 || data === []) {
+                    setDataNull(true)
+                }
             })
             .catch(function (error) {
-                alert('OUPS ! Essayes encore')
+                setIsLoading(false)
+                setDataNull(true)
             })
     }, [])
 
-    if(data){
+    if (data) {
         Marques = data.reduce((unique, item) => {
             return unique.includes(item.marque)
                 ? unique
@@ -52,12 +59,10 @@ export default function HomePage(params) {
         }, [])
 
         Types = data.reduce((unique, item) => {
-            return unique.includes(item.type)
-                ? unique
-                : [...unique, item.type]
+            return unique.includes(item.type) ? unique : [...unique, item.type]
         }, [])
     }
-    
+
     return isLoading ? (
         <div className="spinner-container">
             <div className="loading-spinner"></div>
@@ -65,9 +70,22 @@ export default function HomePage(params) {
     ) : (
         <div className="home-page">
             <Banner />
-            {token ? <Work Marques={Marques} Styles={Styles} Types={Types} /> : ''}
-            <FiltersAndResults Data={data} Marques={Marques} Styles={Styles} Types={Types}/>
-            <Footer />
+            {token ? (
+                <Work Marques={Marques} Styles={Styles} Types={Types} />
+            ) : (
+                ''
+            )}
+            {dataNull ? (
+                <DataIsNull />
+            ) : (
+                <FiltersAndResults
+                    Data={data}
+                    Marques={Marques}
+                    Styles={Styles}
+                    Types={Types}
+                />
+            )}
+       {/*      <Footer /> */}
         </div>
     )
 }

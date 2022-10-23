@@ -8,6 +8,7 @@ require('dotenv').config()
 
 //**********Création d'un post
 exports.createPost = (req, res, next) => {
+    //--Ancienne méthode qui bizarement fonctionne avec Postman
     /*     const dataObject = new Function('return [' + req.body.post + '];')()
     console.log('dataObject[0].type')
     const post = new Post({
@@ -92,12 +93,10 @@ exports.deletePost = (req, res, next) => {
             if (!post) {
                 return res.status(404).json({ message: 'Post non trouvée !' })
             }
-            User.findOne({ email: process.env.adminEmail }).then((user) => {
+            User.findOne({ name: process.env.adminName }).then((user) => {
                 const adminUserId = user._id.toString()
-                if (
-                    post.userId !== req.auth.userId &&
-                    req.auth.userId !== adminUserId
-                ) {
+
+                if (req.auth.userId !== adminUserId) {
                     return res
                         .status(403)
                         .json({ message: 'Requête non autorisée !' })
