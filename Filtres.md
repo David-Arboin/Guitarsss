@@ -3,7 +3,7 @@
 Général :
 1 – Type : Acoustique ou électrique* ou électro-acoustique*
 2- Préférence manuelle : Droitier ou Gaucher
-3 – Majeur : Adulte ou Enfant
+3 – size : Adulte ou Enfant
 4 – Marques : ...
 5 – Style (Hard Rock, Jazz, etc…) / (Voir faisabilité)
 

@@ -15,7 +15,7 @@ exports.createPost = (req, res, next) => {
         userId: req.auth.userId,
         type: dataObject[0].type,
         manualPreference: dataObject[0].manualPreference,
-        majeur: dataObject[0].majeur,
+        size: dataObject[0].size,
         marque: dataObject[0].marque,
         style: dataObject[0].style,
         imageUrl: `${req.protocol}://${req.get('host')}/images/${
@@ -27,7 +27,7 @@ exports.createPost = (req, res, next) => {
         userId: req.auth.userId,
         type: req.body.type,
         manualPreference: req.body.manualPreference,
-        majeur: req.body.majeur,
+        size: req.body.size,
         marque: req.body.marque,
         style: req.body.style,
         imageUrl: `${req.protocol}://${req.get('host')}/images/${
@@ -35,7 +35,7 @@ exports.createPost = (req, res, next) => {
         }`, //--Reconstruction de l'Url de l'image
     })
     post.save()
-        .then(() => res.status(201).json({ message: 'Post enregistré !' }))
+        .then(() => res.status(201).json({ message: 'Gratte enregistrée !' }))
         .catch((error) => res.status(400).json({ error }))
 }
 
@@ -55,7 +55,7 @@ exports.modifyPost = (req, res, next) => {
     Post.findOne({ _id: req.params.id }).then((post) => {
         if (!post) {
             return res.status(404).json({
-                error: new Error('Post non trouvée !'),
+                error: new Error('Gratte non trouvée !'),
             })
         }
         User.findOne({ email: process.env.adminEmail }).then((user) => {
@@ -78,7 +78,7 @@ exports.modifyPost = (req, res, next) => {
                 { ...postObject, _id: req.params.id }
             ) //--Cette ligne permet de comparer les id afin d'être certain de mettre à jour le bon post
                 .then(() =>
-                    res.status(200).json({ message: 'Objet modifié !' })
+                    res.status(200).json({ message: 'Données modifié !' })
                 )
                 .catch((error) => res.status(400).json({ error }))
         })
@@ -91,7 +91,7 @@ exports.deletePost = (req, res, next) => {
     Post.findOne({ _id: req.params.id }) //--On trouve l'objet dans la base de données
         .then((post) => {
             if (!post) {
-                return res.status(404).json({ message: 'Post non trouvée !' })
+                return res.status(404).json({ message: 'Gratte non trouvée !' })
             }
             User.findOne({ name: process.env.adminName }).then((user) => {
                 const adminUserId = user._id.toString()
@@ -108,7 +108,7 @@ exports.deletePost = (req, res, next) => {
                             .then(() =>
                                 res
                                     .status(200)
-                                    .json({ message: 'Post supprimé !' })
+                                    .json({ message: 'Gratte supprimée !' })
                             )
                             .catch((error) => res.status(400).json({ error }))
                     })

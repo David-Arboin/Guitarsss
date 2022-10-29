@@ -17,18 +17,20 @@ export default function HomePage(params) {
     let Marques = []
     let Styles = []
     let Types = []
+    let ManualPreference = ['Droitier', 'Gaucher']
+    let Size = ['Enfant', 'Adulte']
 
     let [token, setToken] = useContext(TokenContext)
     let [data, setData] = useContext(DataContext)
 
     useEffect(() => {
-            const requestOptions = {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            Accept: 'application/json',
-        },
-    }
+        const requestOptions = {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+            },
+        }
         setIsLoading(true)
         fetch('http://localhost:8000/guitarsss/posts/', requestOptions)
             .then((response) => response.json())
@@ -71,7 +73,13 @@ export default function HomePage(params) {
         <div className="home-page">
             <Banner />
             {token ? (
-                <Work Marques={Marques} Styles={Styles} Types={Types} />
+                <Work
+                    Marques={Marques}
+                    Styles={Styles}
+                    Types={Types}
+                    ManualPreference={ManualPreference}
+                    Size={Size}
+                />
             ) : (
                 ''
             )}
@@ -83,9 +91,11 @@ export default function HomePage(params) {
                     Marques={Marques}
                     Styles={Styles}
                     Types={Types}
+                    ManualPreference={ManualPreference}
+                    Size={Size}
                 />
             )}
-       {/*      <Footer /> */}
+            {/*      <Footer /> */}
         </div>
     )
 }

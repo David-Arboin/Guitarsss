@@ -5,30 +5,38 @@ import GuitarList from './GuitarList'
 
 export default function FiltersAndResults(props) {
     let guitarList = props.Data
+    const [searchText, setSearchText] = useState([])
+
     let [guitarSelect, setGuitarSelect] = useState([])
 
     //--Gestion du background au click sur les buttons
     const [isActiveStyles, setIsActiveStyles] = useState(false)
     const [isActiveMarques, setIsActiveMarques] = useState(false)
     const [isActiveTypes, setIsActiveTypes] = useState(false)
+    const [isActiveManualPreference, setIsActiveManualPreference] =
+        useState(false)
+    const [isActiveSize, setIsActiveSize] = useState(false)
 
     //--Gestion de l'affichage si seulement une section de filtre est utilisés (ex : Un ou plusieurs Styles)
     const [selectionMarques, setSelectionMarques] = useState([])
-    const [selectionStyles, setSelectionStyles] = useState([])
+    const [selectionstyles, setSelectionstyles] = useState([])
     const [selectionTypes, setSelectionTypes] = useState([])
+    const [selectionManualPreference, setSelectionManualPreference] = useState(
+        []
+    )
+    const [selectionSize, setSelectionSize] = useState([])
 
     //--Gestion des sélections dans plusieurs filtres
     const [activeStyles, setActiveStyles] = useState([])
     const [activeMarques, setActiveMarques] = useState([])
     const [activeTypes, setActiveTypes] = useState([])
+    const [activeManualPreference, setActiveManualPreference] = useState([])
+    const [activeSize, setActiveSize] = useState([])
 
-    const [selection, setSelection] = useState([])
+    let nameFiltres = ['styles', 'marques', 'types', 'manualPreference', 'size']
+    let [selection, setSelection] = useState([])
+
     /*     const [titleFilter, setTitleFilter] = useState([]) */
-
-    const [searchText, setSearchText] = useState([])
-
-
-    console.log(searchText)
 
     const handleClick = async (e) => {
         e.preventDefault()
@@ -56,7 +64,7 @@ export default function FiltersAndResults(props) {
             }
         }
 
-        if (e.currentTarget.className.includes('types')) {
+        if (e.currentTarget.className.includes('type')) {
             if (styleHandle.backgroundColor) {
                 styleHandle.backgroundColor = null
                 styleHandle.color = null
@@ -66,252 +74,112 @@ export default function FiltersAndResults(props) {
             }
         }
 
-        //--Gestione des filtres
-
-        let nameFiltres = ['style', 'marque', 'type']
-
-        console.log(e.currentTarget.id)
-
-        if (!searchText.includes(e.currentTarget.id)) {
-            searchText.push(e.currentTarget.id)
-        } else if (searchText.includes(e.currentTarget.id)) {
-            const newSearchText = searchText.filter(function (f) {
-                return f !== e.currentTarget.id
-            })
-            setSearchText(newSearchText)
+        if (e.currentTarget.className.includes('manualPreference')) {
+            if (styleHandle.backgroundColor) {
+                styleHandle.backgroundColor = null
+                styleHandle.color = null
+            } else {
+                styleHandle.backgroundColor = 'blue'
+                styleHandle.color = 'white'
+            }
         }
+
+        if (e.currentTarget.className.includes('size')) {
+            if (styleHandle.backgroundColor) {
+                styleHandle.backgroundColor = null
+                styleHandle.color = null
+            } else {
+                styleHandle.backgroundColor = 'red'
+                styleHandle.color = 'white'
+            }
+        }
+        //--Gestione des filtres
+        //***Modèle a reconstituer
+        /* selection = {styles: ['Rock']}, {marques: []}, {types: []}, {manualPreference: []}, {size: []} */
+        
+        //***Cette fonction permet de savoir si un titre de filtre (ex : styles) est déjà présent dans le tableau selection */
+        //**Si oui, l'indice du titre est renvoyé, sinon false */
+        function arrayHasKey(selection, key) {
+            for (let obj of selection) {
+                let indexOfTitleFilter = selection.indexOf(obj)
+                if (key in obj) {
+                    return [true, indexOfTitleFilter]
+                }
+            }
+            return false
+        }
+//**Reconstitution du modèle ci-dessus en dynamique */
+        if (!arrayHasKey(selection, [e.currentTarget.title])) {
+            selection.push({ [e.currentTarget.title]: [e.currentTarget.id] })
+        } else {
+            let indexOfTitleFilter = arrayHasKey(selection, [e.currentTarget.title])[1]
+            let targetIsInSelection = selection[indexOfTitleFilter][e.currentTarget.title].includes(e.currentTarget.id)
+            if (!targetIsInSelection){selection[indexOfTitleFilter][e.currentTarget.title].push(e.currentTarget.id)}else if(targetIsInSelection){
+                let indexOfTargetInSelection = selection[indexOfTitleFilter][e.currentTarget.title].indexOf(e.currentTarget.id)
+                selection[indexOfTitleFilter][e.currentTarget.title].splice(indexOfTargetInSelection, 1)
+            }
+        }
+        console.log(selection)
+
+
+
+
 
         if (
             searchText !== undefined &&
             searchText !== '' &&
             searchText != null
         ) {
-            guitarSelect = guitarList.filter((item) => {
-                let allFilterAreComplete = 0
-                return nameFiltres.some((searchInFilter) => {
-                    console.log(searchText);
-                    for (let i=0; i < searchText.length; i++){
-                        if (item[searchInFilter].includes(searchText[i])) {
-                            allFilterAreComplete++
+            if (!searchText.includes(e.currentTarget.id)) {
+                searchText.push(e.currentTarget.id)
+
+                guitarSelect = Array.from(guitarList).filter((item) => {
+                    let allFilterAreComplete = 0
+
+                    return nameFiltres.some((searchInFilter) => {
+                        for (let i = 0; i < searchText.length; i++) {
+                            if (item[searchInFilter].includes(searchText[i])) {
+                                allFilterAreComplete++
+                            }
                         }
-                    } 
-                    if (allFilterAreComplete === searchText.length) {
-                        return item
-                    }
+
+                        if (allFilterAreComplete === searchText.length) {
+                            return item
+                        }
+                    })
                 })
-            })
-        }
-        setGuitarSelect(guitarSelect)
-    }
-
-    /*     const handleClickStyles = async (el) => {
-        el.preventDefault()
-
-        //--Tableau des styles sélectionnés pour gérer plusieurs filtres
-        if (!activeStyles.includes(el.currentTarget.id)) {
-            activeStyles.push(el.currentTarget.id)
-        } else {
-            const newActiveStyles = activeStyles.filter(function (f) {
-                return f !== el.currentTarget.id
-            })
-            setActiveStyles(newActiveStyles)
-        }
-
-        if (selectionStyles.length === 0) {
-            setSelectionStyles(
-                ...selectionStyles,
-                guitarList.filter(
-                    (element) => element.style === el.currentTarget.id
-                )
-            )
-        } else if (
-            selectionStyles.length !== 0 &&
-            !selectionStyles.some(
-                (element) => element.style === el.currentTarget.id
-            )
-        ) {
-            setSelectionStyles(
-                selectionStyles.concat(
-                    guitarList.filter(
-                        (element) => element.style === el.currentTarget.id
-                    )
-                )
-            )
-        } else if (
-            selectionStyles.length !== 0 &&
-            selectionStyles.some(
-                (element) => element.style === el.currentTarget.id
-            )
-        ) {
-            setSelectionStyles(
-                selectionStyles.filter(function (item) {
-                    return item.style !== el.currentTarget.id
+                setGuitarSelect(guitarSelect)
+            } else if (searchText.includes(e.currentTarget.id)) {
+                const newSearchText = searchText.filter(function (f) {
+                    return f !== e.currentTarget.id
                 })
-            )
-        }
-        if (el.currentTarget.style.backgroundColor) {
-            el.currentTarget.style.backgroundColor = null
-            el.currentTarget.style.color = null
-        } else {
-            el.currentTarget.style.backgroundColor = 'rgb(32, 190, 190)'
-            el.currentTarget.style.color = 'white'
-        }
-    }
 
-    const handleClickMarques = async (e) => {
-        e.preventDefault()
-
-        //--Tableau des marques sélectionnés pour gérer plusieurs filtres
-        if (!activeMarques.includes(e.currentTarget.id)) {
-            activeMarques.push(e.currentTarget.id)
-        } else {
-            const newActiveMarques = activeMarques.filter(function (f) {
-                return f !== e.currentTarget.id
-            })
-            setActiveMarques(newActiveMarques)
-        }
-
-        if (selectionMarques.length === 0) {
-            setSelectionMarques(
-                ...selectionMarques,
-                guitarList.filter(
-                    (element) => element.marque === e.currentTarget.id
-                )
-            )
-        } else if (
-            selectionMarques.length !== 0 &&
-            !selectionMarques.some(
-                (element) => element.marque === e.currentTarget.id
-            )
-        ) {
-            setSelectionMarques(
-                selectionMarques.concat(
-                    guitarList.filter(
-                        (element) => element.marque === e.currentTarget.id
-                    )
-                )
-            )
-        } else if (
-            selectionMarques.length !== 0 &&
-            selectionMarques.some(
-                (element) => element.marque === e.currentTarget.id
-            )
-        ) {
-            setSelectionMarques(
-                selectionMarques.filter(function (item) {
-                    return item.marque !== e.currentTarget.id
+                guitarSelect = Array.from(guitarList).filter((item) => {
+                    let allFilterAreComplete = 0
+                    return nameFiltres.some((searchInFilter) => {
+                        for (let i = 0; i < newSearchText.length; i++) {
+                            if (
+                                item[searchInFilter].includes(newSearchText[i])
+                            ) {
+                                allFilterAreComplete++
+                            }
+                        }
+                        if (allFilterAreComplete === newSearchText.length) {
+                            return item
+                        }
+                    })
                 })
-            )
-        }
-        if (e.currentTarget.style.backgroundColor) {
-            e.currentTarget.style.backgroundColor = null
-            e.currentTarget.style.color = null
-        } else {
-            e.currentTarget.style.backgroundColor = 'rgb(84, 93, 93)'
-            e.currentTarget.style.color = 'white'
+                setGuitarSelect(guitarSelect)
+                setSearchText(newSearchText)
+            }
         }
     }
-
-    const handleClickTypes = async (el) => {
-        el.preventDefault()
-
-        //--Tableau des marques sélectionnés pour gérer plusieurs filtres
-        if (!activeTypes.includes(el.currentTarget.id)) {
-            activeTypes.push(el.currentTarget.id)
-        } else {
-            const newActiveTypes = activeTypes.filter(function (f) {
-                return f !== el.currentTarget.id
-            })
-            setActiveTypes(newActiveTypes)
-        }
-
-        if (selectionTypes.length === 0) {
-            setSelectionTypes(
-                ...selectionTypes,
-                guitarList.filter(
-                    (element) => element.type === el.currentTarget.id
-                )
-            )
-        } else if (
-            selectionTypes.length !== 0 &&
-            !selectionTypes.some(
-                (element) => element.type === el.currentTarget.id
-            )
-        ) {
-            setSelectionTypes(
-                selectionTypes.concat(
-                    guitarList.filter(
-                        (element) => element.type === el.currentTarget.id
-                    )
-                )
-            )
-        } else if (
-            selectionTypes.length !== 0 &&
-            selectionTypes.some(
-                (element) => element.type === el.currentTarget.id
-            )
-        ) {
-            setSelectionTypes(
-                selectionTypes.filter(function (item) {
-                    return item.type !== el.currentTarget.id
-                })
-            )
-        }
-        if (el.currentTarget.style.backgroundColor) {
-            el.currentTarget.style.backgroundColor = null
-            el.currentTarget.style.color = null
-        } else {
-            el.currentTarget.style.backgroundColor = 'rgb(32, 190, 190)'
-            el.currentTarget.style.color = 'white'
-        }
-    }
-
-    //--Tableau de rendu final
-    //--Si seulement des styles sont séléctionnés
-    if (
-        selectionStyles.length > 0 &&
-        selectionMarques.length === 0 &&
-        selectionTypes.length === 0
-    ) {
-        guitarSelect = [...selectionStyles].filter(
-            (val, id, array) => array.indexOf(val) === id
-        )
-    } //--Si seulement des marques sont séléctionnés
-    else if (
-        selectionStyles.length === 0 &&
-        selectionMarques.length > 0 &&
-        selectionTypes.length === 0
-    ) {
-        guitarSelect = [...selectionMarques].filter(
-            (val, id, array) => array.indexOf(val) === id
-        )
-    }
-    //--Si seulement des types sont séléctionnés
-    else if (
-        selectionStyles.length === 0 &&
-        selectionMarques.length === 0 &&
-        selectionTypes.length > 0
-    ) {
-        guitarSelect = [...selectionTypes].filter(
-            (val, id, array) => array.indexOf(val) === id
-        )
-    } //--Si un ou plusieurs styles ET marques sont séléctionnés
-    else if (
-        activeStyles.length > 0 &&
-        activeMarques.length > 0 &&
-        activeTypes.length === 0
-    ) {
-        console.log(activeStyles)
-        console.log(activeMarques)
-    } else {
-        guitarSelect = guitarList
-    } */
 
     if (searchText.length === 0) {
         guitarSelect = guitarList
     }
-    console.log(guitarSelect)
     let key = 0
+
     return (
         <>
             <div className="display-options">
@@ -383,17 +251,63 @@ export default function FiltersAndResults(props) {
                         </button>
                     ))}
                 </div>
+
+                <div className="display-buttons-manualPreference">
+                    Préférence manuelle
+                    {props.ManualPreference.map((e) => (
+                        <button
+                            id={e}
+                            className="style-button-manualPreference"
+                            name={e}
+                            value={e}
+                            key={'ManualPreference' + key++}
+                            title="manualPreference"
+                            style={{
+                                backgroundColor: isActiveManualPreference
+                                    ? 'rgb(84, 93, 93)'
+                                    : '',
+                                color: isActiveManualPreference ? 'white' : '',
+                            }}
+                            onClick={handleClick}
+                        >
+                            {e}
+                        </button>
+                    ))}
+                </div>
+
+                <div className="display-buttons-size">
+                    Taille
+                    {props.Size.map((e) => (
+                        <button
+                            id={e}
+                            className="style-button-size"
+                            name={e}
+                            value={e}
+                            key={'Size' + key++}
+                            title="size"
+                            style={{
+                                backgroundColor: isActiveSize
+                                    ? 'rgb(84, 93, 93)'
+                                    : '',
+                                color: isActiveSize ? 'white' : '',
+                            }}
+                            onClick={handleClick}
+                        >
+                            {e}
+                        </button>
+                    ))}
+                </div>
             </div>
 
             <div className="display-guitars">
-                {guitarSelect.map(
+                {Array.from(guitarSelect).map(
                     ({
                         _id,
                         style,
                         marque,
                         type,
                         imageUrl,
-                        majeur,
+                        size,
                         manualPreference,
                     }) => (
                         <GuitarList
@@ -402,7 +316,7 @@ export default function FiltersAndResults(props) {
                             style={style}
                             marque={marque}
                             type={type}
-                            majeur={majeur}
+                            size={size}
                             manualPreference={manualPreference}
                             imageUrl={imageUrl}
                             token

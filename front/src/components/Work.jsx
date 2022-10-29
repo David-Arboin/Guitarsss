@@ -16,7 +16,7 @@ export default function Work(props) {
     //--Import data
     let [data, setData] = useContext(DataContext)
     //--Gestion des input de type radio
-    const [age, setAge] = useState()
+    const [size, setSize] = useState()
     const [manualPreference, setManualPreference] = useState()
 
     //--Possibilité d'ajouter un style une marque ou un type
@@ -102,19 +102,20 @@ export default function Work(props) {
         inputs.current.push(el)
     }
 
-    const handleAgeChange = (e) => {
-        setAge(e.target.value)
+    const handleSizeChange = (e) => {
+        setSize(e.target.value)
     }
-    const handlemanualPreferenceChange = (e) => {
+    const handleManualPreferenceChange = (e) => {
         setManualPreference(e.target.value)
     }
 
     const handleForm = (event, props) => {
         event.preventDefault()
 
-        const form = event.target
-        setManualPreference(event.target[6].value)
+        console.log(size);
+        console.log(manualPreference);
 
+        const form = event.target
         const formData = new FormData()
         const requestOptionsCreate = {
             method: 'POST',
@@ -137,8 +138,8 @@ export default function Work(props) {
             alert('Quelle marque ?')
         } else if (form[3].value === '' || form[3].value === 'DEFAULT') {
             alert('Quel type ?')
-        } else if (age === undefined) {
-            alert('Est-ce pour mineur ou majeur ?')
+        } else if (size === undefined) {
+            alert('Est-ce pour mineur ou size ?')
         } else if (manualPreference === undefined) {
             alert('Est-ce pour droitier ou gaucher ?')
         } else {
@@ -146,7 +147,7 @@ export default function Work(props) {
             formData.append('style', form[1].value)
             formData.append('marque', form[2].value)
             formData.append('type', form[3].value)
-            formData.append('majeur', age)
+            formData.append('size', size)
             formData.append('manualPreference', manualPreference)
             fetch('http://localhost:8000/guitarsss/posts', requestOptionsCreate)
                 .then((response) => response.json())
@@ -158,7 +159,7 @@ export default function Work(props) {
                         .then((response) => response.json())
                         .then((data) => {
                             setData(data)
-                            alert('Post enregistré')
+                            alert('Gratte enregistrée !')
                             form.reset()
                             setAddStyle(false)
                             setAddMarque(false)
@@ -242,7 +243,7 @@ export default function Work(props) {
                                 Quelle marque ?
                             </option>
                             {props.Marques.map((e) => (
-                                <option key={'e' + keyMarques++}>{e}</option>
+                                <option key={e + keyMarques++}>{e}</option>
                             ))}
                             <option key="addMarqueKey">
                                 Ajouter une marque
@@ -269,29 +270,29 @@ export default function Work(props) {
                             </option>
 
                             {props.Types.map((e) => (
-                                <option key={'e' + keyTypes++}>{e}</option>
+                                <option key={e + keyTypes++}>{e}</option>
                             ))}
                             <option key="addTypeKey">Ajouter un type</option>
                         </select>
                     )}
-                    <h2>Age</h2>
+                    <h2>Taille</h2>
                     <div>
                         <input
                             type="radio"
-                            name="age"
-                            value="Mineur"
-                            onChange={handleAgeChange}
-                            checked={age === 'Mineur'}
+                            name="size"
+                            value="Enfant"
+                            onChange={handleSizeChange}
+                            checked={size === 'Enfant'}
                         />
-                        <label htmlFor="mineur">Mineur</label>
+                        <label htmlFor="mineur">Enfant</label>
                         <input
                             type="radio"
-                            name="age"
-                            value="Majeur"
-                            onChange={handleAgeChange}
-                            checked={age === 'Majeur'}
+                            name="size"
+                            value="Adulte"
+                            onChange={handleSizeChange}
+                            checked={size === 'Adulte'}
                         />
-                        <label htmlFor="majeur">Majeur</label>
+                        <label htmlFor="size">Adulte</label>
                     </div>
                     <h2>Préférence manuelle</h2>
                     <div>
@@ -299,7 +300,7 @@ export default function Work(props) {
                             type="radio"
                             name="manualPreference"
                             value="Droitier"
-                            onChange={handlemanualPreferenceChange}
+                            onChange={handleManualPreferenceChange}
                             checked={manualPreference === 'Droitier'}
                         />
                         Droitier
@@ -307,7 +308,7 @@ export default function Work(props) {
                             type="radio"
                             name="manualPreference"
                             value="Gaucher"
-                            onChange={handlemanualPreferenceChange}
+                            onChange={handleManualPreferenceChange}
                             checked={manualPreference === 'Gaucher'}
                         />
                         Gaucher

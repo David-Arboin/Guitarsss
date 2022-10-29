@@ -3,9 +3,13 @@ import '../styles/GuitarList.css'
 import { useContext, useEffect } from 'react'
 import { DeleteActiveContext } from '../App'
 import { TokenContext } from '../App'
+import { DataContext } from '../App'
+
 
 
 export default function GuitarList(props) {
+    let [data, setData] = useContext(DataContext)
+
     let [token, setToken] = useContext(TokenContext)
 
     let [deleteActive, setDeleteActive] = useContext(DeleteActiveContext)
@@ -24,25 +28,20 @@ export default function GuitarList(props) {
             requestOptionsDelete
         )
             .then((response) => response.json())
-            .then((data) => {console.log('Gratte supprimée');
-/*                 const requestOptions = {
+            .then((data) => {
+                const requestOptions = {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
-                        Authorization: 'Bearer ' + token,
+                        Accept: 'application/json',
                     },
                 }
-                const newArrayPosts = fetch(
-                    'http://localhost:8000/guitarsss/posts',
-                    requestOptions
-                )
-                    .then((response) => response.json())
-                    .then((data) => {
-                        const posts = data.slice().sort(function (a, b) {
-                            return new Date(b.createdAt) - new Date(a.createdAt)
+                    fetch('http://localhost:8000/guitarsss/posts/', requestOptions)
+                        .then((response) => response.json())
+                        .then((data) => {
+                            setData(data)
                         })
-                        setPosts(posts)
-                    }) */
+                console.log('Gratte supprimée')
             })
 }
 
@@ -72,6 +71,8 @@ export default function GuitarList(props) {
                         {props.style}
                     </h3>
                     <p className="display-text-type">{props.type}</p>
+                    <p className="display-text-type">{props.manualPreference}</p>
+                    <p className="display-text-type">{props.size === 'Adulte' ? 'Taille adulte' : 'Taille enfant'}</p>
                 </div>
                 {deleteActive ? (
                     <div

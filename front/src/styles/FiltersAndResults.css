@@ -1,6 +1,8 @@
 .display-buttons-styles,
 .display-buttons-marques,
-.display-buttons-types {
+.display-buttons-types,
+.display-buttons-manualPreference,
+.display-buttons-size {
     width: 100%;
     display: flex;
     flex-wrap: wrap;
@@ -19,12 +21,21 @@
 .display-buttons-types {
     background-color: rgb(255, 0, 0);
 }
+.display-buttons-manualPreference{
+    background-color: rgb(69, 147, 43);
+}
+.display-buttons-size{
+    background-color: rgb(215, 73, 170);
+}
 .display-image-guitar {
     width: 100%;
 }
 .style-button-styles,
 .style-button-marques,
-.style-button-types {
+.style-button-types,
+.style-button-manualPreference,
+.style-button-size
+    {
     min-width: 10%;
     height: auto;
     border-radius: 2vw;
@@ -41,6 +52,12 @@
 .style-button-types {
     border: 5px solid rgb(255, 135, 37);
 }
+.style-button-manualPreference {
+    border: 5px solid rgb(164, 42, 42);
+}
+.style-button-size {
+    border: 5px solid rgb(216, 216, 7);
+}
 .style-button-styles:hover {
     border: 5px solid rgb(0, 0, 0);
 }
@@ -48,6 +65,12 @@
     border: 5px solid rgb(0, 0, 0);
 }
 .style-button-types:hover {
+    border: 5px solid rgb(0, 0, 0);
+}
+.style-button-manualPreference:hover {
+    border: 5px solid rgb(0, 0, 0);
+}
+.style-button-size:hover {
     border: 5px solid rgb(0, 0, 0);
 }
 .display-options {
