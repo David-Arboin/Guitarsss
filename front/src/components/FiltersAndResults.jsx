@@ -1,11 +1,11 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import { useState, useEffect } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import '../styles/FiltersAndResults.css'
 import GuitarList from './GuitarList'
 
 export default function FiltersAndResults(props) {
     let guitarList = props.Data
-    const [searchText, setSearchText] = useState([])
+    /*     const [searchText, setSearchText] = useState([]) */
 
     let [guitarSelect, setGuitarSelect] = useState([])
 
@@ -33,11 +33,33 @@ export default function FiltersAndResults(props) {
     const [activeManualPreference, setActiveManualPreference] = useState([])
     const [activeSize, setActiveSize] = useState([])
 
-    let nameFiltres = ['styles', 'marques', 'types', 'manualPreference', 'size']
     let [selection, setSelection] = useState([])
+    const isFirstRender = useRef(true)
 
+    if (
+        selection.length === 0 ||
+        selection === undefined ||
+        selection === '' ||
+        selection === null ||
+        selection === [] ||
+        guitarSelect.length === 0 ||
+        guitarSelect === undefined ||
+        guitarSelect === '' ||
+        guitarSelect === null
+    ) {
+        guitarSelect = guitarList
+    }
+
+    function arrayHasKey(selection, key) {
+        for (let obj of selection) {
+            let indexOfTitleFilter = selection.indexOf(obj)
+            if (key in obj) {
+                return [true, indexOfTitleFilter]
+            }
+        }
+        return false
+    }
     /*     const [titleFilter, setTitleFilter] = useState([]) */
-
     const handleClick = async (e) => {
         e.preventDefault()
 
@@ -95,89 +117,114 @@ export default function FiltersAndResults(props) {
         }
         //--Gestione des filtres
         //***Modèle a reconstituer
-        /* selection = {styles: ['Rock']}, {marques: []}, {types: []}, {manualPreference: []}, {size: []} */
-        
-        //***Cette fonction permet de savoir si un titre de filtre (ex : styles) est déjà présent dans le tableau selection */
-        //**Si oui, l'indice du titre est renvoyé, sinon false */
-        function arrayHasKey(selection, key) {
-            for (let obj of selection) {
-                let indexOfTitleFilter = selection.indexOf(obj)
-                if (key in obj) {
-                    return [true, indexOfTitleFilter]
-                }
-            }
-            return false
-        }
-//**Reconstitution du modèle ci-dessus en dynamique */
+        /* selection = {styles: ['Rock']}, {marques: []}, {types: []}, {manualPreference: []}, {size: []}
+
+        //*** Cette fonction permet de savoir si un titre de filtre (ex : styles) est déjà présent dans le tableau selection */
+        /** Si oui, l'indice du titre est renvoyé, sinon false */
+
+        //** Reconstitution du modèle ci-dessus en dynamique */
         if (!arrayHasKey(selection, [e.currentTarget.title])) {
             selection.push({ [e.currentTarget.title]: [e.currentTarget.id] })
         } else {
-            let indexOfTitleFilter = arrayHasKey(selection, [e.currentTarget.title])[1]
-            let targetIsInSelection = selection[indexOfTitleFilter][e.currentTarget.title].includes(e.currentTarget.id)
-            if (!targetIsInSelection){selection[indexOfTitleFilter][e.currentTarget.title].push(e.currentTarget.id)}else if(targetIsInSelection){
-                let indexOfTargetInSelection = selection[indexOfTitleFilter][e.currentTarget.title].indexOf(e.currentTarget.id)
-                selection[indexOfTitleFilter][e.currentTarget.title].splice(indexOfTargetInSelection, 1)
+            let indexOfTitleFilter = arrayHasKey(selection, [
+                e.currentTarget.title,
+            ])[1]
+            let targetIsInSelection = selection[indexOfTitleFilter][
+                e.currentTarget.title
+            ].includes(e.currentTarget.id)
+            if (!targetIsInSelection) {
+                selection[indexOfTitleFilter][e.currentTarget.title].push(
+                    e.currentTarget.id
+                )
+            } else if (targetIsInSelection) {
+                let indexOfTargetInSelection = selection[indexOfTitleFilter][
+                    e.currentTarget.title
+                ].indexOf(e.currentTarget.id)
+                selection[indexOfTitleFilter][e.currentTarget.title].splice(
+                    indexOfTargetInSelection,
+                    1
+                )
+                if (
+                    selection[indexOfTitleFilter][e.currentTarget.title]
+                        .length === 0
+                ) {
+                    selection.splice(indexOfTitleFilter, 1)
+                }
             }
         }
-        console.log(selection)
-
-
-
-
 
         if (
-            searchText !== undefined &&
-            searchText !== '' &&
-            searchText != null
+            selection.length === 0 ||
+            selection === undefined ||
+            selection === '' ||
+            selection === null ||
+            selection === [] ||
+            guitarSelect.length === 0 ||
+            guitarSelect === undefined ||
+            guitarSelect === '' ||
+            guitarSelect === null
         ) {
-            if (!searchText.includes(e.currentTarget.id)) {
-                searchText.push(e.currentTarget.id)
+            guitarSelect = guitarList
+            setGuitarSelect(guitarSelect)
+        } else {
+            guitarSelect = Array.from(guitarList).filter((item) => {
+                let allFilterAreComplete = 0
 
-                guitarSelect = Array.from(guitarList).filter((item) => {
-                    let allFilterAreComplete = 0
+                return selection.some((searchInSelection) => {
+                    //** Mécanique de gestion des filtres séparés,
+                    /** C'est à dire : Afficher toutes les guitares si tous les élément d'un seul filtre sont sélectionnés */
+                    if (selection.length === 1) {
+                        for (let key in searchInSelection) {
+                            for (
+                                let a = 0;
+                                a < searchInSelection[key].length;
+                                a++
+                            ) {
+                                if (item[key] === searchInSelection[key][a]) {
+                                    return item
+                                }
+                            }
+                        }
+                        //** Mécanique de gestion des filtres associés,
+                        /** C'est à dire : Afficher uniquement les guitares qui répondent aux filtres sélectionnés */
+                    } else if (selection.length > 1) {
+                        for (let key in searchInSelection) {
+                            for (
+                                let a = 0;
+                                a < searchInSelection[key].length;
+                                a++
+                            ) {
 
-                    return nameFiltres.some((searchInFilter) => {
-                        for (let i = 0; i < searchText.length; i++) {
-                            if (item[searchInFilter].includes(searchText[i])) {
-                                allFilterAreComplete++
+                                if (
+                                    searchInSelection[key].includes(item[key])
+                                ) {
+                                    allFilterAreComplete++
+                                }
+                                console.log('searchInSelection[key] :', searchInSelection[key])
+                                console.log('item[key] :', item[key])
                             }
                         }
 
-                        if (allFilterAreComplete === searchText.length) {
-                            return item
-                        }
-                    })
-                })
-                setGuitarSelect(guitarSelect)
-            } else if (searchText.includes(e.currentTarget.id)) {
-                const newSearchText = searchText.filter(function (f) {
-                    return f !== e.currentTarget.id
-                })
-
-                guitarSelect = Array.from(guitarList).filter((item) => {
-                    let allFilterAreComplete = 0
-                    return nameFiltres.some((searchInFilter) => {
-                        for (let i = 0; i < newSearchText.length; i++) {
+                        /*     for (let i = 0; i < selection.length; i++) {
                             if (
-                                item[searchInFilter].includes(newSearchText[i])
+                                item[searchInSelection].includes(selection[i])
                             ) {
                                 allFilterAreComplete++
                             }
-                        }
-                        if (allFilterAreComplete === newSearchText.length) {
+                        } */
+                        console.log('allFilterAreComplete :', allFilterAreComplete)
+                        console.log('selection.length :', selection.length)
+                        if (allFilterAreComplete === selection.length) {
                             return item
                         }
-                    })
+                    }
                 })
-                setGuitarSelect(guitarSelect)
-                setSearchText(newSearchText)
-            }
+            })
+            setGuitarSelect(guitarSelect)
         }
     }
+    console.log('guitarSelect :', guitarSelect)
 
-    if (searchText.length === 0) {
-        guitarSelect = guitarList
-    }
     let key = 0
 
     return (
@@ -191,7 +238,7 @@ export default function FiltersAndResults(props) {
                             className="style-button-styles"
                             name={el}
                             value={el}
-                            title="styles"
+                            title="style"
                             key={'Styles' + key++}
                             style={{
                                 backgroundColor: isActiveStyles
@@ -214,7 +261,7 @@ export default function FiltersAndResults(props) {
                             className="style-button-marques"
                             name={e}
                             value={e}
-                            title="marques"
+                            title="marque"
                             key={'Marques' + key++}
                             style={{
                                 backgroundColor: isActiveMarques
@@ -238,7 +285,7 @@ export default function FiltersAndResults(props) {
                             name={e}
                             value={e}
                             key={'Types' + key++}
-                            title="types"
+                            title="type"
                             style={{
                                 backgroundColor: isActiveTypes
                                     ? 'rgb(84, 93, 93)'
