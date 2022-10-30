@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from 'react'
 import React from 'react'
 import './styles/HomePage.css'
-import Banner from './components/Banner'
+/* import Banner from './components/Banner' */
 import './styles/LoadingSpinner.css'
 
 import Work from './components/Work'
@@ -76,7 +76,7 @@ export default function HomePage(params) {
         </div>
     ) : (
         <div className="home-page">
-            <Banner />
+          {/*   <Banner /> */}
             {token ? (
                 <Work
                     Marques={Marques}
