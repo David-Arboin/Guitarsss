@@ -5,10 +5,10 @@
   "private": true,
   "main": "server.js",
   "scripts": {
-    "frontend": "cd frontend && yarn start",
+    "frontend": "cd front && yarn start",
     "backend": "cd api && nodemon server.js",
     "dev": "concurrently --kill-others-on-fail \"npm run backend\" \"npm run frontend\"",
-    "heroku-postbuild": "YARN_PRODUCTION=true cd frontend && yarn && yarn build"
+    "heroku-postbuild": "YARN_PRODUCTION=true cd front && yarn && yarn build"
   },
   "author": "",
   "license": "ISC",
