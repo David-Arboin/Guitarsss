@@ -11,6 +11,10 @@
     "react-scripts": "5.0.1",
     "web-vitals": "^2.1.4"
   },
+  "engines": {
+    "node": "18.x",
+    "yarn": "1.x"
+  },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
@@ -23,6 +27,7 @@
       "react-app/jest"
     ]
   },
+  "proxy": "https://reseau-social-d-entreprise.herokuapp.com/",
   "browserslist": {
     "production": [
       ">0.2%",
