@@ -73,9 +73,9 @@ app.use('/guitarsss/auth', userRoutes)
 
 // Front route
 if (process.env.REACT_APP_ENVIRONMENT === 'production') {
-    app.use(express.static(path.join(__dirname, './frontend/build')))
+    app.use(express.static(path.join(__dirname, './front/build')))
     app.get('*', (req, res) => {
-        res.sendFile(path.join(__dirname, '/./frontend/build/index.html'))
+        res.sendFile(path.join(__dirname, '/./front/build/index.html'))
     })
 }
 module.exports = app //--Exporte l'application pour y accéder depuis les autres fichiers
