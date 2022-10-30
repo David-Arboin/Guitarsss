@@ -5,6 +5,9 @@ import { useNavigate } from 'react-router-dom'
 import './styles/LoginPages.css'
 
 function LoginPage() {
+        const production =
+        'https://guitarsss.herokuapp.com/guitarsss/auth/login/'
+    const developpement = 'http://localhost:8000/guitarsss/auth/login'
     // React States
     const [errorMessages, setErrorMessages] = useState({})
     const [isSubmitted, setIsSubmitted] = useState(false)
@@ -40,7 +43,8 @@ function LoginPage() {
                     password: e.target[1].value,
                 }),
             }
-            fetch('http://localhost:8000/guitarsss/auth/login', requestOptions)
+            fetch(process.env.REACT_APP_ENVIRONMENT === 'production' ? production : developpement,
+             requestOptions)
                 .then((response) => response.json())
                 .then((data) => {
                     if (data.userId === undefined) {

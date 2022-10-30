@@ -8,6 +8,9 @@ import { DataContext } from '../App'
 import '../styles/LoadingSpinner.css'
 
 export default function Work(props) {
+    const production =
+    'https://guitarsss.herokuapp.com/guitarsss/posts/'
+const developpement = 'http://localhost:8000/guitarsss/posts'
     //--Personnalisation des keys
     let keyStyles = 0
     let keyMarques = 0
@@ -149,11 +152,12 @@ export default function Work(props) {
             formData.append('type', form[3].value)
             formData.append('size', size)
             formData.append('manualPreference', manualPreference)
-            fetch('http://localhost:8000/guitarsss/posts', requestOptionsCreate)
+            fetch(process.env.REACT_APP_ENVIRONMENT === 'production' ? production : developpement,
+            requestOptionsCreate)
                 .then((response) => response.json())
                 .then((data) => {
                     fetch(
-                        'http://localhost:8000/guitarsss/posts/',
+                        process.env.REACT_APP_ENVIRONMENT === 'production' ? production : developpement,
                         requestOptions
                     )
                         .then((response) => response.json())

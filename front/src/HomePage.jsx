@@ -12,6 +12,9 @@ import { TokenContext } from './App'
 import { DataContext } from './App'
 
 export default function HomePage(params) {
+    const production =
+    'https://guitarsss.herokuapp.com/guitarsss/posts/'
+    const developpement = 'http://localhost:8000/guitarsss/posts/'
     const [isLoading, setIsLoading] = useState(true)
     const [dataNull, setDataNull] = useState(false)
     let Marques = []
@@ -32,7 +35,9 @@ export default function HomePage(params) {
             },
         }
         setIsLoading(true)
-        fetch('http://localhost:8000/guitarsss/posts/', requestOptions)
+        fetch(
+            process.env.REACT_APP_ENVIRONMENT === 'production' ? production : developpement
+            , requestOptions)
             .then((response) => response.json())
             .then((data) => {
                 setData(data)

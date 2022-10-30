@@ -5,8 +5,6 @@ import { DeleteActiveContext } from '../App'
 import { TokenContext } from '../App'
 import { DataContext } from '../App'
 
-
-
 export default function GuitarList(props) {
     let [data, setData] = useContext(DataContext)
 
@@ -14,9 +12,11 @@ export default function GuitarList(props) {
 
     let [deleteActive, setDeleteActive] = useContext(DeleteActiveContext)
 
-
-           //****************Suppression d'une guitare
+    //****************Suppression d'une guitare
     const handleDelete = async (event) => {
+        const production = 'https://guitarsss.herokuapp.com/guitarsss/posts/'
+        const developpement = 'http://localhost:8000/guitarsss/posts/'
+
         event.preventDefault()
         let target = event.target.id
         const requestOptionsDelete = {
@@ -24,7 +24,9 @@ export default function GuitarList(props) {
             headers: { Authorization: 'Bearer ' + token },
         }
         fetch(
-            'http://localhost:8000/guitarsss/posts/' + target,
+            process.env.REACT_APP_ENVIRONMENT === 'production'
+                ? production + '/' + target
+                : developpement + '/'+ target,
             requestOptionsDelete
         )
             .then((response) => response.json())
@@ -36,14 +38,19 @@ export default function GuitarList(props) {
                         Accept: 'application/json',
                     },
                 }
-                    fetch('http://localhost:8000/guitarsss/posts/', requestOptions)
-                        .then((response) => response.json())
-                        .then((data) => {
-                            setData(data)
-                        })
+                fetch(
+                    process.env.REACT_APP_ENVIRONMENT === 'production'
+                        ? production
+                        : developpement,
+                    requestOptions
+                )
+                    .then((response) => response.json())
+                    .then((data) => {
+                        setData(data)
+                    })
                 console.log('Gratte supprimée')
             })
-}
+    }
 
     return (
         <>
@@ -71,8 +78,14 @@ export default function GuitarList(props) {
                         {props.style}
                     </h3>
                     <p className="display-text-type">{props.type}</p>
-                    <p className="display-text-type">{props.manualPreference}</p>
-                    <p className="display-text-type">{props.size === 'Adulte' ? 'Taille adulte' : 'Taille enfant'}</p>
+                    <p className="display-text-type">
+                        {props.manualPreference}
+                    </p>
+                    <p className="display-text-type">
+                        {props.size === 'Adulte'
+                            ? 'Taille adulte'
+                            : 'Taille enfant'}
+                    </p>
                 </div>
                 {deleteActive ? (
                     <div
