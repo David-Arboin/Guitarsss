@@ -1,16 +1,15 @@
 import '../styles/Banner.css'
-import logo from '../assets/Logo.png'
+import BandeauGuitarsss from '../assets/Bandeau-Guitarsss.jpg'
 
 function Banner () {
 
     return (
         <div className='guitarsss-banner'>
                             <img
-                    src={logo}
-                    alt="Logo de l'application Guitarss"
-                    className="guitarsss-logo"
+                    src={BandeauGuitarsss}
+                    alt="Bandeau de l'application Guitarsss"
+                    className="bandeau-guitarsss-logo"
                 />
-                <h1 className="guitarsss-title">Guitarsss</h1>
         </div>
     )
 }

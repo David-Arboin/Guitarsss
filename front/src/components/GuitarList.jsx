@@ -60,6 +60,7 @@ export default function GuitarList(props) {
                     alt={'propse de marque' + props.marque}
                     className="display-image-guitar"
                 />
+
                 <div className="display-text">
                     <h2
                         id={props.marque}

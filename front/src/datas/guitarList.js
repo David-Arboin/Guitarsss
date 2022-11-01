@@ -1,4 +1,4 @@
-import gibson from '../assets/gibson.jpg'
+import gibson from '../assets/gibson.png'
 import ibanez from '../assets/ibanez.png'
 import lag from '../assets/lag.jpg'
 import musicman from '../assets/musicman.jpg'

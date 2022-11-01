@@ -2,10 +2,13 @@
 import { useState, useRef, useEffect } from 'react'
 import '../styles/FiltersAndResults.css'
 import GuitarList from './GuitarList'
+import ResultIsNull from './ResultIsNull'
 
 export default function FiltersAndResults(props) {
     let guitarList = props.Data
     /*     const [searchText, setSearchText] = useState([]) */
+
+    const [resultIsNull, setResultIsNull] = useState(false)
 
     let [guitarSelect, setGuitarSelect] = useState([])
 
@@ -41,11 +44,7 @@ export default function FiltersAndResults(props) {
         selection === undefined ||
         selection === '' ||
         selection === null ||
-        selection === [] ||
-        guitarSelect.length === 0 ||
-        guitarSelect === undefined ||
-        guitarSelect === '' ||
-        guitarSelect === null
+        selection === []
     ) {
         guitarSelect = guitarList
     }
@@ -158,11 +157,7 @@ export default function FiltersAndResults(props) {
             selection === undefined ||
             selection === '' ||
             selection === null ||
-            selection === [] ||
-            guitarSelect.length === 0 ||
-            guitarSelect === undefined ||
-            guitarSelect === '' ||
-            guitarSelect === null
+            selection === []
         ) {
             guitarSelect = guitarList
             setGuitarSelect(guitarSelect)
@@ -190,41 +185,29 @@ export default function FiltersAndResults(props) {
                     } else if (selection.length > 1) {
                         for (let key in searchInSelection) {
                             for (
-                                let a = 0;
-                                a < searchInSelection[key].length;
-                                a++
+                                let b = 0;
+                                b < searchInSelection[key].length;
+                                b++
                             ) {
-
                                 if (
-                                    searchInSelection[key].includes(item[key])
+                                    searchInSelection[key][b] === (item[key])
                                 ) {
                                     allFilterAreComplete++
                                 }
-                                console.log('searchInSelection[key] :', searchInSelection[key])
-                                console.log('item[key] :', item[key])
                             }
+                            }
+                            if (allFilterAreComplete === selection.length) {
+                                return item
                         }
 
-                        /*     for (let i = 0; i < selection.length; i++) {
-                            if (
-                                item[searchInSelection].includes(selection[i])
-                            ) {
-                                allFilterAreComplete++
-                            }
-                        } */
-                        console.log('allFilterAreComplete :', allFilterAreComplete)
-                        console.log('selection.length :', selection.length)
-                        if (allFilterAreComplete === selection.length) {
-                            return item
-                        }
                     }
                 })
             })
+            if(guitarSelect.length === 0){setResultIsNull(true)} else {setResultIsNull(false)}
+
             setGuitarSelect(guitarSelect)
         }
     }
-    console.log('guitarSelect :', guitarSelect)
-
     let key = 0
 
     return (
@@ -347,27 +330,31 @@ export default function FiltersAndResults(props) {
             </div>
 
             <div className="display-guitars">
-                {Array.from(guitarSelect).map(
-                    ({
-                        _id,
-                        style,
-                        marque,
-                        type,
-                        imageUrl,
-                        size,
-                        manualPreference,
-                    }) => (
-                        <GuitarList
-                            id={_id}
-                            key={'List' + _id}
-                            style={style}
-                            marque={marque}
-                            type={type}
-                            size={size}
-                            manualPreference={manualPreference}
-                            imageUrl={imageUrl}
-                            token
-                        />
+                {resultIsNull ? (
+                    <ResultIsNull />
+                ) : (
+                    guitarSelect.map(
+                        ({
+                            _id,
+                            style,
+                            marque,
+                            type,
+                            imageUrl,
+                            size,
+                            manualPreference,
+                        }) => (
+                            <GuitarList
+                                id={_id}
+                                key={'List' + _id}
+                                style={style}
+                                marque={marque}
+                                type={type}
+                                size={size}
+                                manualPreference={manualPreference}
+                                imageUrl={imageUrl}
+                                token
+                            />
+                        )
                     )
                 )}
             </div>

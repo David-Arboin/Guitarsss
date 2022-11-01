@@ -1,19 +1,7 @@
 .guitarsss-banner {
-	color: black;
-	text-align: right;
-	padding: 1vh;
-	border-bottom: solid 3px black;
-	display: flex;
-	justify-content: flex-end;
-	align-items: center;
 	width: 100%;
-	height: 100px;
 }
 
-.guitarsss-title {
-	margin: 2vw;
-}
-
-.guitarsss-logo {
-	width: 7vw;
+.bandeau-guitarsss-logo {
+	width: 100%;
 }

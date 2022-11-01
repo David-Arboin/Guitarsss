@@ -2,11 +2,19 @@
     position: relative;
     width: 25%;
     aspect-ratio: 1/1.618;
-    border-radius: 2vw;
+    border-radius: 0.5vw;
     background: white;
-    opacity: 0.7;
+    background-color:rgba(255, 255, 255, 0.5);
     margin: 1vw;
     padding: 1vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+.display-image-guitar {
+    width: 100%;
+    height: 100%;
 }
 .display-text{
     display: flex;

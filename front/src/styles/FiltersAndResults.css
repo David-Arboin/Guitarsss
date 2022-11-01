@@ -21,21 +21,17 @@
 .display-buttons-types {
     background-color: rgb(255, 0, 0);
 }
-.display-buttons-manualPreference{
+.display-buttons-manualPreference {
     background-color: rgb(69, 147, 43);
 }
-.display-buttons-size{
+.display-buttons-size {
     background-color: rgb(215, 73, 170);
-}
-.display-image-guitar {
-    width: 100%;
 }
 .style-button-styles,
 .style-button-marques,
 .style-button-types,
 .style-button-manualPreference,
-.style-button-size
-    {
+.style-button-size {
     min-width: 10%;
     height: auto;
     border-radius: 2vw;
@@ -79,7 +75,12 @@
 }
 .display-guitars {
     width: 100%;
+    height: auto;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
+    background-image: url('../assets/Fond-Guitarsss.jpg');
+    background-size: 'cover';
+    background-repeat: no-repeat;
+    background-attachment: fixed;
 }
