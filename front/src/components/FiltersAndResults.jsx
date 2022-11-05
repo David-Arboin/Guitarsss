@@ -61,11 +61,10 @@ export default function FiltersAndResults(props) {
     /*     const [titleFilter, setTitleFilter] = useState([]) */
     const handleClick = async (e) => {
         e.preventDefault()
-
-        //--Gestion des styles des filtres
+        //--Gestion des styles des filtres depuis la section principale
         let styleHandle = e.currentTarget.style
 
-        if (e.currentTarget.className.includes('styles')) {
+        if (e.currentTarget.title.includes('style')) {
             if (styleHandle.backgroundColor) {
                 styleHandle.backgroundColor = null
                 styleHandle.color = null
@@ -75,7 +74,7 @@ export default function FiltersAndResults(props) {
             }
         }
 
-        if (e.currentTarget.className.includes('marques')) {
+        if (e.currentTarget.title.includes('marque')) {
             if (styleHandle.backgroundColor) {
                 styleHandle.backgroundColor = null
                 styleHandle.color = null
@@ -85,7 +84,7 @@ export default function FiltersAndResults(props) {
             }
         }
 
-        if (e.currentTarget.className.includes('type')) {
+        if (e.currentTarget.title.includes('type')) {
             if (styleHandle.backgroundColor) {
                 styleHandle.backgroundColor = null
                 styleHandle.color = null
@@ -95,7 +94,7 @@ export default function FiltersAndResults(props) {
             }
         }
 
-        if (e.currentTarget.className.includes('manualPreference')) {
+        if (e.currentTarget.title.includes('manualPreference')) {
             if (styleHandle.backgroundColor) {
                 styleHandle.backgroundColor = null
                 styleHandle.color = null
@@ -105,7 +104,7 @@ export default function FiltersAndResults(props) {
             }
         }
 
-        if (e.currentTarget.className.includes('size')) {
+        if (e.currentTarget.title.includes('size')) {
             if (styleHandle.backgroundColor) {
                 styleHandle.backgroundColor = null
                 styleHandle.color = null
@@ -114,6 +113,16 @@ export default function FiltersAndResults(props) {
                 styleHandle.color = 'white'
             }
         }
+
+        //--Gestion des styles des filtres depuis la section déjà établie dans le but de supprimer un filtre
+        if (e.currentTarget.className.includes('filter-selected')) {
+            let handleFilterToDelete = document.getElementById(
+                e.currentTarget.id
+            )
+            handleFilterToDelete.style.backgroundColor = null
+            handleFilterToDelete.style.color = null
+        }
+
         //--Gestione des filtres
         //***Modèle a reconstituer
         /* selection = {styles: ['Rock']}, {marques: []}, {types: []}, {manualPreference: []}, {size: []}
@@ -151,7 +160,7 @@ export default function FiltersAndResults(props) {
                 }
             }
         }
-
+        console.log(selection)
         if (
             selection.length === 0 ||
             selection === undefined ||
@@ -161,6 +170,7 @@ export default function FiltersAndResults(props) {
         ) {
             guitarSelect = guitarList
             setGuitarSelect(guitarSelect)
+            setResultIsNull(false)
         } else {
             guitarSelect = Array.from(guitarList).filter((item) => {
                 let allFilterAreComplete = 0
@@ -189,146 +199,195 @@ export default function FiltersAndResults(props) {
                                 b < searchInSelection[key].length;
                                 b++
                             ) {
-                                if (
-                                    searchInSelection[key][b] === (item[key])
-                                ) {
+                                if (searchInSelection[key][b] === item[key]) {
                                     allFilterAreComplete++
                                 }
                             }
-                            }
-                            if (allFilterAreComplete === selection.length) {
-                                return item
                         }
-
+                        if (allFilterAreComplete === selection.length) {
+                            return item
+                        }
                     }
                 })
             })
-            if(guitarSelect.length === 0){setResultIsNull(true)} else {setResultIsNull(false)}
+            if (guitarSelect.length === 0) {
+                setResultIsNull(true)
+            } else {
+                setResultIsNull(false)
+            }
 
             setGuitarSelect(guitarSelect)
         }
     }
     let key = 0
-
+    console.log(selection)
     return (
         <>
             <div className="display-options">
-                <div id="styles" className="display-buttons-styles">
-                    Styles
-                    {props.Styles.map((el) => (
-                        <button
-                            id={el}
-                            className="style-button-styles"
-                            name={el}
-                            value={el}
-                            title="style"
-                            key={'Styles' + key++}
-                            style={{
-                                backgroundColor: isActiveStyles
-                                    ? 'rgb(32, 190, 190)'
-                                    : '',
-                                color: isActiveStyles ? 'white' : '',
-                            }}
-                            onClick={handleClick}
-                        >
-                            {el}
-                        </button>
-                    ))}
+                <div className="display-buttons">
+                    <div id="styles" className="display-buttons-styles">
+                        <div className="display-title">Styles</div>
+
+                        {props.Styles.map((el) => (
+                            <button
+                                id={el}
+                                className="style-button-styles"
+                                name={el}
+                                value={el}
+                                title="style"
+                                key={'Styles' + key++}
+                                style={{
+                                    backgroundColor: isActiveStyles
+                                        ? 'rgb(32, 190, 190)'
+                                        : '',
+                                    color: isActiveStyles ? 'white' : '',
+                                }}
+                                onClick={handleClick}
+                            >
+                                {el}
+                            </button>
+                        ))}
+                    </div>
                 </div>
 
-                <div className="display-buttons-marques">
-                    Marques
-                    {props.Marques.map((e) => (
-                        <button
-                            id={e}
-                            className="style-button-marques"
-                            name={e}
-                            value={e}
-                            title="marque"
-                            key={'Marques' + key++}
-                            style={{
-                                backgroundColor: isActiveMarques
-                                    ? 'rgb(84, 93, 93)'
-                                    : '',
-                                color: isActiveMarques ? 'white' : '',
-                            }}
-                            onClick={handleClick}
-                        >
-                            {e}
-                        </button>
-                    ))}
-                </div>
+                <div className="display-buttons">
+                    <div className="display-buttons-marques">
+                        <div className="display-title">Marques</div>
 
-                <div className="display-buttons-types">
-                    Types
-                    {props.Types.map((e) => (
-                        <button
-                            id={e}
-                            className="style-button-types"
-                            name={e}
-                            value={e}
-                            key={'Types' + key++}
-                            title="type"
-                            style={{
-                                backgroundColor: isActiveTypes
-                                    ? 'rgb(84, 93, 93)'
-                                    : '',
-                                color: isActiveTypes ? 'white' : '',
-                            }}
-                            onClick={handleClick}
-                        >
-                            {e}
-                        </button>
-                    ))}
+                        {props.Marques.map((e) => (
+                            <button
+                                id={e}
+                                className="style-button-marques"
+                                name={e}
+                                value={e}
+                                title="marque"
+                                key={'Marques' + key++}
+                                style={{
+                                    backgroundColor: isActiveMarques
+                                        ? 'rgb(84, 93, 93)'
+                                        : '',
+                                    color: isActiveMarques ? 'white' : '',
+                                }}
+                                onClick={handleClick}
+                            >
+                                {e}
+                            </button>
+                        ))}
+                    </div>
                 </div>
+                <div className="display-buttons">
+                    <div className="display-buttons-types">
+                        <div className="display-title">Types</div>
 
-                <div className="display-buttons-manualPreference">
-                    Préférence manuelle
-                    {props.ManualPreference.map((e) => (
-                        <button
-                            id={e}
-                            className="style-button-manualPreference"
-                            name={e}
-                            value={e}
-                            key={'ManualPreference' + key++}
-                            title="manualPreference"
-                            style={{
-                                backgroundColor: isActiveManualPreference
-                                    ? 'rgb(84, 93, 93)'
-                                    : '',
-                                color: isActiveManualPreference ? 'white' : '',
-                            }}
-                            onClick={handleClick}
-                        >
-                            {e}
-                        </button>
-                    ))}
+                        {props.Types.map((e) => (
+                            <button
+                                id={e}
+                                className="style-button-types"
+                                name={e}
+                                value={e}
+                                key={'Types' + key++}
+                                title="type"
+                                style={{
+                                    backgroundColor: isActiveTypes
+                                        ? 'rgb(84, 93, 93)'
+                                        : '',
+                                    color: isActiveTypes ? 'white' : '',
+                                }}
+                                onClick={handleClick}
+                            >
+                                {e}
+                            </button>
+                        ))}
+                    </div>
                 </div>
+                <div className="display-buttons">
+                    <div className="display-buttons-manualPreference">
+                        <div className="display-title">Préférence manuelle</div>
 
-                <div className="display-buttons-size">
-                    Taille
-                    {props.Size.map((e) => (
-                        <button
-                            id={e}
-                            className="style-button-size"
-                            name={e}
-                            value={e}
-                            key={'Size' + key++}
-                            title="size"
-                            style={{
-                                backgroundColor: isActiveSize
-                                    ? 'rgb(84, 93, 93)'
-                                    : '',
-                                color: isActiveSize ? 'white' : '',
-                            }}
-                            onClick={handleClick}
-                        >
-                            {e}
-                        </button>
-                    ))}
+                        {props.ManualPreference.map((e) => (
+                            <button
+                                id={e}
+                                className="style-button-manualPreference"
+                                name={e}
+                                value={e}
+                                key={'ManualPreference' + key++}
+                                title="manualPreference"
+                                style={{
+                                    backgroundColor: isActiveManualPreference
+                                        ? 'rgb(84, 93, 93)'
+                                        : '',
+                                    color: isActiveManualPreference
+                                        ? 'white'
+                                        : '',
+                                }}
+                                onClick={handleClick}
+                            >
+                                {e}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+                <div className="display-buttons">
+                    <div className="display-buttons-size">
+                        <div className="display-title">Taille</div>
+
+                        {props.Size.map((e) => (
+                            <button
+                                id={e}
+                                className="style-button-size"
+                                name={e}
+                                value={e}
+                                key={'Size' + key++}
+                                title="size"
+                                style={{
+                                    backgroundColor: isActiveSize
+                                        ? 'rgb(84, 93, 93)'
+                                        : '',
+                                    color: isActiveSize ? 'white' : '',
+                                }}
+                                onClick={handleClick}
+                            >
+                                {e}
+                            </button>
+                        ))}
+                    </div>
                 </div>
             </div>
 
+            {selection.length !== 0 ? (
+                <div className="display-filters-selected">
+                    {selection.map((item) => (
+                        <div>
+                            {Object.entries(item).map(([key, val]) => (
+                                <div className="display-delete-filter">
+                                    {val.map((filter) => {
+                                        return (
+                                            <>
+                                                {/*                                                 <div
+                                                    className="title-filter-selected"
+                                                    key={key}
+                                                >
+                                                    {{ key } === 'style'
+                                                        ? 'Styles'
+                                                        : ''}
+                                                </div> */}
+                                                <div
+                                                    id={filter}
+                                                    className={`filter-selected ${key}`}
+                                                    title={key}
+                                                    onClick={handleClick}
+                                                >
+                                                    {` X ${filter}`}
+                                                </div>
+                                            </>
+                                        )
+                                    })}
+                                </div>
+                            ))}
+                        </div>
+                    ))}
+                </div>
+            ) : null}
             <div className="display-guitars">
                 {resultIsNull ? (
                     <ResultIsNull />
